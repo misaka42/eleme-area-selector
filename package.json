@@ -1,0 +1,23 @@
+{
+  "name": "eleme-area-selector",
+  "version": "0.0.2",
+  "description": "### description",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./node_modules/webpack/bin/webpack.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ppq1991/eleme-area-selector.git"
+  },
+  "author": "peiqiao.peng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ppq1991/eleme-area-selector/issues"
+  },
+  "homepage": "https://github.com/ppq1991/eleme-area-selector#readme",
+  "devDependencies": {
+    "webpack": "^1.13.1"
+  }
+}
