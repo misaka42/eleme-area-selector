@@ -318,7 +318,7 @@
     },
 
     setCurrentLevel: function(level) {
-      if (level > 0 && level < this.data.struct.length - 1) {
+      if (level > 0 && level < this.data.struct.length) {
         this.currentLevel = level;
       } else {
         this.currentLevel = 0;
