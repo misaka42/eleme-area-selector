@@ -5,6 +5,8 @@
 
 ;(function(){
 
+  var __CACHE__ = {};
+
   var DEFAULT_CONFIG = {
     origin: '/api/other/filter/', // api url
     styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.7/dist/style.css', // style from CDN
@@ -70,14 +72,20 @@
       }
       this.refs = {};
 
-      __fetchData({
-        url: this.config.origin + this.config.typeMap[this.currentType].id,
-        params: this.config.typeMap[this.currentType].params
-      }, this.__build.bind(this));
+      if (__CACHE__[this.currentType]) {
+        this.__build(__CACHE__[this.currentType]);
+      } else {
+        __fetchData({
+          url: this.config.origin + this.config.typeMap[this.currentType].id,
+          params: this.config.typeMap[this.currentType].params
+        }, this.__build.bind(this));
+      }
     },
 
     __build: function(data) {
       this.data = data;
+      __CACHE__[this.currentType] = data;
+
       var refs = this.refs;
       var _this = this;
 
