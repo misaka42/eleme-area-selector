@@ -335,9 +335,14 @@
 
     __removeItem: function(index) {
       this.model.splice(index, 1);
-      var max = Math.max.apply(null, this.model.map(function(item) { return item.level }));
-      if (max < this.currentLevel) {
-        this.setCurrentLevel(max);
+      var level = this.currentLevel;
+
+      if (this.model.length === 0) {
+        this.setCurrentLevel(0);
+      } else {
+        if (!this.model.some(function(item) { return item.level === level })) {
+          this.setCurrentLevel(Math.max.apply(null, this.model.map(function(item) { return item.level })));
+        }
       }
       this.refreshModel();
     },
