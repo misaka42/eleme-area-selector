@@ -10,7 +10,13 @@
     styleCDN: '/dist/style.css', // style from CDN
     typeMap: {
       '交易平台BU': { id: 'bu', params: { time: 'hour' } },
-      '红包': { id: 'redReward' }
+      '红包': { id: 'redReward' },
+      'BOD': { id: 'bod' },
+      '高校': { id: 'business/gx' },
+      '白领': { id: 'business/bl' },
+      '早餐': { id: 'breakfast' },
+      '城市补贴与优惠': { id: 'cityAllowance' },
+      '城市': { id: 'cityAllowance' }
     },
     types: ['交易平台BU'] // default display types
   };
