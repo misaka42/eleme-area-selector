@@ -8,7 +8,7 @@
   }
 
   .input-container {
-    border: 1px solid #ddd;
+    border: 1px solid #e7eaec;
     display: flex;
     height: 28px;
     line-height: 26px;
@@ -60,7 +60,7 @@
     .current-type {
       text-align: center;
       width: 100px;
-      border-right: 1px solid #ddd;
+      border-right: 1px solid #e7eaec;
       cursor: default;
     }
 
@@ -199,16 +199,16 @@
   color: #666;
   z-index: 9999;
   background-color: #fff;
+  box-shadow: 1px 1px 3px #eee;
 
   &::-webkit-scrollbar {
     display: none;
   }
 
   .eas-select-item {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e7eaec;
     line-height: 26px;
     cursor: pointer;
-    transition: all .3s;
 
     > span {
       padding: 0 15px;
@@ -226,6 +226,7 @@
     &.hover {
       background-color: #19d4ae;
       color: #fff;
+      border-color: transparent;
       > * {
         border-color: transparent;
       }
