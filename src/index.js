@@ -330,7 +330,7 @@
       }
       var model = {};
       var level = Math.max.apply(null, this.model.map(function(item) { return item.level }));
-      model.level = level;
+      model.level = level + 1;
       model.data = this.model.filter(function(item) { return item.level === level }).map(function(item) { return item.i }).join(',');
       return model;
     },
