@@ -185,6 +185,8 @@
         __forEach(this.config.types, function(item) {
           __append(_this.refs.typeList, __createElement('li', { className: 'type-list-item', innerHTML: item }));
         });
+      } else {
+        __remove(refs.typeList);
       }
     },
 
