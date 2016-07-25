@@ -20,6 +20,7 @@
     },
     onReady: null,
     onChange: null,
+    onTypeChange: null,
     types: ['交易平台BU'] // default display types
   };
 
@@ -49,6 +50,7 @@
     setCurrentType: function(type) {
       this.currentType = type;
       this.refresh();
+      if (this.config.onTypeChange) { this.config.onTypeChange(type) }
     },
 
     refresh: function() {
