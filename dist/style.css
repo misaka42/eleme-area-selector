@@ -100,7 +100,7 @@
   max-height: 96px;
   overflow: auto;
 }
-.eas-container .result-container .eas-tags ::-webkit-scrollbar {
+.eas-container .result-container .eas-tags::-webkit-scrollbar {
   display: none;
 }
 .eas-container .result-container .eas-tag {
@@ -179,7 +179,7 @@
   z-index: 9999;
   background-color: #fff;
 }
-.eas-select ::-webkit-scrollbar {
+.eas-select::-webkit-scrollbar {
   display: none;
 }
 .eas-select .eas-select-item {

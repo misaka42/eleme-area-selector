@@ -9,7 +9,7 @@
 
   var DEFAULT_CONFIG = {
     origin: '/api/other/filter/', // api url
-    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.12/dist/style.css', // style from CDN
+    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.14/dist/style.css', // style from CDN
     typeMap: {
       '交易平台BU': { id: 'bu', params: { time: 'hour' } },
       '红包': { id: 'redReward' },
