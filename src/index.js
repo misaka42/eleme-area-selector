@@ -34,7 +34,7 @@
       this.el.innerHTML = 'Loading Style...';
       var _this = this;
       this.__configStyle(function() {
-        _this.setCurrentType(this.config.types[0]);
+        _this.setCurrentType(_this.config.types[0]);
       });
     },
 
