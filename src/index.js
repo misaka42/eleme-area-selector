@@ -317,15 +317,28 @@
       return el;
     },
 
+    setCurrentLevel: function(level) {
+      if (level > 0 && level < this.data.struct.length - 1) {
+        this.currentLevel = level;
+      } else {
+        this.currentLevel = 0;
+      }
+    },
+
     __selectItem: function(item) {
       if (!this.model.some(function(i) { return i.i === item.i && i.level === item.level; })) {
         this.model.unshift(item);
+        this.setCurrentLevel(item.level);
         this.refreshModel();
       }
     },
 
     __removeItem: function(index) {
       this.model.splice(index, 1);
+      var max = Math.max.apply(null, this.model.map(function(item) { return item.level }));
+      if (max < this.currentLevel) {
+        this.setCurrentLevel(max);
+      }
       this.refreshModel();
     },
 
@@ -339,17 +352,17 @@
         return { level: '', data: '' };
       }
       var model = {};
-      var level = Math.max.apply(null, this.model.map(function(item) { return item.level }));
+      var level = this.currentLevel;
       model.level = level + 1;
       model.data = this.model.filter(function(item) { return item.level === level }).map(function(item) { return item.i }).join(',');
       return model;
     },
 
     refreshModel: function() {
-      var max = Math.max.apply(null, this.model.map(function(item) { return item.level }));
+      var level = this.currentLevel;
       this.refs.tags.innerHTML = this.model.map(function(item) {
         var className = 'eas-tag';
-        if (item.level < max) {
+        if (item.level !== level) {
           className += ' disabled';
         }
         return '<li class="' + className + '"><span>' + item.n + '</span><i></i></li>';
