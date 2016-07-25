@@ -44,6 +44,8 @@
         var style = __createElement('link', { rel: 'stylesheet', href: this.config.styleCDN }, { id: 'EAS-Style' });
         style.onload = callback;
         document.head.appendChild(style);
+      } else {
+        callback();
       }
     },
 
