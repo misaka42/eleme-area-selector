@@ -7,7 +7,7 @@
 
   var DEFAULT_CONFIG = {
     origin: '/api/other/filter/', // api url
-    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.0.4/dist/style.css', // style from CDN
+    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.0/dist/style.css', // style from CDN
     typeMap: {
       '交易平台BU': { id: 'bu', params: { time: 'hour' } },
       '红包': { id: 'redReward' },
@@ -18,6 +18,8 @@
       '城市补贴与优惠': { id: 'cityAllowance' },
       '城市': { id: 'cityAllowance' }
     },
+    onReady: null,
+    onChange: null,
     types: ['交易平台BU'] // default display types
   };
 
@@ -29,13 +31,17 @@
 
   AreaSelector.prototype = {
     init: function() {
-      this.setCurrentType(this.config.types[0]);
-      this.__configStyle();
+      this.el.innerHTML = 'Loading Style...';
+      var _this = this;
+      this.__configStyle(function() {
+        _this.setCurrentType(this.config.types[0]);
+      });
     },
 
-    __configStyle: function() {
+    __configStyle: function(callback) {
       if (!document.querySelector('[data-id=EAS-Style]')) {
         var style = __createElement('link', { rel: 'stylesheet', href: this.config.styleCDN }, { id: 'EAS-Style' });
+        style.onload = callback;
         document.head.appendChild(style);
       }
     },
@@ -46,7 +52,7 @@
     },
 
     refresh: function() {
-      this.el.innerHTML = 'Loading...';
+      this.el.innerHTML = 'Loading Data...';
       this.model = [];
       this.data = {};
       this.keyword = '';
@@ -157,6 +163,8 @@
       });
 
       this.__rebuild = false;
+
+      if (this.config.onReady) { this.config.onReady() }
     },
 
     __buildTypeList: function() {
@@ -334,6 +342,8 @@
         }
         return '<li class="' + className + '"><span>' + item.n + '</span><i></i></li>';
       }).join('');
+
+      if (this.config.onChange) { this.config.onChange() }
     },
 
     search: function() {
