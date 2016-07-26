@@ -5,7 +5,7 @@
 
 ;(function(){
 
-  var __CACHE__ = {};
+  var DATA_CACHE = {};
 
   var DEFAULT_CONFIG = {
     origin: '/api/other/filter/', // api url
@@ -26,35 +26,67 @@
     types: ['交易平台BU'] // default display types
   };
 
-  function AreaSelector(el, config) {
+  function AreaSelector (el, config) {
     this.el = el;
     this.config = Object.assign({}, DEFAULT_CONFIG, config);
-    this.init();
+    this.$init();
   }
 
   AreaSelector.prototype = {
-    init: function() {
-      this.el.innerHTML = 'Loading Style...';
-      var _this = this;
-      this.__configStyle(function() {
-        _this.setCurrentType(_this.config.types[0]);
-      });
-    },
+    el: null,
+    config: {},
+    currentType: '',
+    model: [],
+    data: {},
+    keyword: '',
 
-    __configStyle: function(callback) {
+    $selects: {},
+    $nodes: [],
+
+    $init: function () {
+      // load style
+      var _this = this;
       if (!document.querySelector('[data-id=EAS-Style]')) {
         var style = __createElement('link', { rel: 'stylesheet', href: this.config.styleCDN }, { id: 'EAS-Style' });
-        style.onload = callback;
+        style.onload = function () { _this.setCurrentType() }
         document.head.appendChild(style);
       } else {
-        callback();
+        _this.setCurrentType()
       }
     },
 
-    setCurrentType: function(type) {
-      this.currentType = type;
-      this.refresh();
+    setCurrentType: function (type) {
+      if (!type) { type = this.config.types[0] }
       if (this.config.onTypeChange) { this.config.onTypeChange(type) }
+
+      this.currentType = type;
+      this.$load();
+    },
+
+    $load: function () {
+      if (DATA_CACHE[this.currentType]) {
+        this.$complie(DATA_CACHE[this.currentType]);
+      } else {
+        __fetchData({
+          url: this.config.origin + this.config.typeMap[this.currentType].id,
+          params: this.config.typeMap[this.currentType].params
+        }, this.$complie);
+      }
+    },
+
+    $complie: function () {
+
+    },
+
+    $destory: function () {
+      this.$removeEventListeners();
+
+      // remove elements
+      this.el.innerHTML = '';
+    },
+
+    $removeEventListeners: function () {
+
     },
 
     refresh: function() {
@@ -63,11 +95,6 @@
       this.data = {};
       this.keyword = '';
       this.selects = {};
-
-      // is rebuild ?
-      if (!__isEmpty(this.refs)) {
-        this.__destroy();
-      }
 
       if (__CACHE__[this.currentType]) {
         this.__build(__CACHE__[this.currentType]);
@@ -186,7 +213,7 @@
           __append(_this.refs.typeList, __createElement('li', { className: 'type-list-item', innerHTML: item }));
         });
       } else {
-        __remove(this.refs.typeList);
+        __remove(refs.typeList);
       }
     },
 
@@ -497,6 +524,8 @@
   /* ---- exports ---- */
   if (typeof exports === 'object') {
     module.exports = AreaSelector;
+  } else if (typeof define === 'function' && define.amd) {
+    define([], AreaSelector);
   } else {
     window.AreaSelector = AreaSelector;
   }
