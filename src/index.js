@@ -98,7 +98,7 @@
       this.data = data;
       __CACHE__[this.currentType] = data;
 
-      var refs = this.refs;
+      var refs = this.refs = {};
       var _this = this;
       this.__eventsHandlerRemove = [];
 
