@@ -9,7 +9,7 @@
 
   var DEFAULT_CONFIG = {
     origin: '/api/other/filter/', // api url
-    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.15/dist/style.css', // style from CDN
+    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.20/dist/style.css', // style from CDN
     typeMap: {
       '交易平台BU': { id: 'bu', params: { time: 'hour' } },
       '红包': { id: 'redReward' },
@@ -199,6 +199,7 @@
         __forEach(this.config.types, function(item) {
           __append(_this.refs.typeList, __createElement('li', { className: 'type-list-item', innerHTML: item }));
         });
+        this.refs.type.classList.add('list');
       } else {
         __remove(this.refs.typeList);
       }

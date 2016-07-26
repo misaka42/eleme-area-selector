@@ -31,7 +31,7 @@
   position: absolute;
   top: 26px;
   left: -1px;
-  width: 101px;
+  width: 100%;
   display: none;
   margin: 0;
   padding: 0;
@@ -53,9 +53,14 @@
 }
 .eas-container .input-container .current-type {
   text-align: center;
-  width: 100px;
+  padding: 0 10px;
+  min-width: 100px;
   border-right: 1px solid #e7eaec;
   cursor: default;
+}
+.eas-container .input-container .current-type.list::after {
+  content: '▼';
+  margin-left: 5px;
 }
 .eas-container .input-container .eas-input {
   border: none;

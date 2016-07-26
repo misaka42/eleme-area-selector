@@ -32,7 +32,7 @@
         position: absolute;
         top: 26px;
         left: -1px;
-        width: 101px;
+        width: 100%;
         display: none;
         margin: 0;
         padding: 0;
@@ -59,9 +59,15 @@
 
     .current-type {
       text-align: center;
-      width: 100px;
+      padding: 0 10px;
+      min-width: 100px;
       border-right: 1px solid #e7eaec;
       cursor: default;
+
+      &.list::after {
+        content: '▼';
+        margin-left: 5px;
+      }
     }
 
     .eas-input {
