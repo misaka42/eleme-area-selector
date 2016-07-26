@@ -66,7 +66,7 @@
 
       // is rebuild ?
       if (!__isEmpty(this.refs)) {
-        this.__destroy();
+        this.$clear();
       }
 
       if (__CACHE__[this.currentType]) {
@@ -79,7 +79,7 @@
       }
     },
 
-    __destroy: function() {
+    $clear: function() {
       this.__eventsHandlerRemove.forEach(function(item) { item() });
       this.__eventsHandlerRemove = [];
 
@@ -87,6 +87,20 @@
       __remove(this.refs.selectContainer);
 
       this.refs = {};
+    },
+
+    $destroy: function() {
+      this.$clear();
+      this.config.onChange = null;
+      this.config.onReady = null;
+      this.config.onTypeChange = null;
+
+      var _this = this;
+      __forEach(this, function(key) {
+        if (typeof key === 'function') {
+          _this[key] = null;
+        }
+      })
     },
 
     __addEventListener: function(el, eventName, func) {
