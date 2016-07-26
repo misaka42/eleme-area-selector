@@ -66,11 +66,8 @@
 
       // is rebuild ?
       if (!__isEmpty(this.refs)) {
-        this.__rebuild = true;
-        __remove(this.refs.container);
-        __remove(this.refs.selectContainer);
+        this.__destroy();
       }
-      this.refs = {};
 
       if (__CACHE__[this.currentType]) {
         this.__build(__CACHE__[this.currentType]);
@@ -82,12 +79,28 @@
       }
     },
 
+    __destroy: function() {
+      this.__eventsHandlerRemove.forEach(function(item) { item() });
+      this.__eventsHandlerRemove = [];
+
+      __remove(this.refs.container);
+      __remove(this.refs.selectContainer);
+
+      this.refs = {};
+    },
+
+    __addEventListener: function(el, eventName, func) {
+      el.addEventListener(eventName, func);
+      this.__eventsHandlerRemove.push(function() { el.removeEventListener(eventName, func) });
+    },
+
     __build: function(data) {
       this.data = data;
       __CACHE__[this.currentType] = data;
 
       var refs = this.refs;
       var _this = this;
+      this.__eventsHandlerRemove = [];
 
       // create basic element
       refs.container = __createElement('div', { className: 'eas-container' });
@@ -114,24 +127,13 @@
       this.__buildTypeList();
 
       // event handler
-      if (!this.rebuild) {
-        document.body.addEventListener('click', function() {
-          _this.hideSelect(0);
-        });
-      }
+      this.__addEventListener(document.body, 'click', function() { _this.hideSelect(0) });
 
-      this.refs.input.addEventListener('click', function(e) {
-        _this.showSelect();
-        e.stopPropagation();
-      });
+      this.__addEventListener(this.refs.input, 'click', function(e) { _this.showSelect(); e.stopPropagation() });
 
-      this.refs.input.addEventListener('input', function(e) {
-        _this.search();
-      });
+      this.__addEventListener(this.refs.input, 'input', function() { _this.search() });
 
-      this.refs.clearAll.addEventListener('click', function() {
-        _this.clearAll();
-      });
+      this.__addEventListener(this.refs.clearAll, 'click', function() { _this.clearAll() });
 
       __delegate(this.refs.typeList, 'type-list-item', 'click', function(target) {
         _this.setCurrentType(target.textContent)
@@ -173,8 +175,6 @@
       this.data[0][0].forEach(function(item) {
         _this.__selectItem(item);
       });
-
-      this.__rebuild = false;
 
       if (this.config.onReady) { this.config.onReady() }
     },
@@ -395,6 +395,9 @@
   }
 
   function __remove(el) {
+    if (!el) {
+      return;
+    }
     if (typeof el.remove === 'function') {
       el.remove();
     } else {
