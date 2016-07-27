@@ -1,92 +1,100 @@
-/*
-* @name eleme-area-selector
-* @author peiqiao.peng@ele.me
-*/
-
 ;(function(){
 
-  var __CACHE__ = {};
+  var VERSION = '0.1.21';
+
+  var DATA_CACHE = {};
+
+  /* --- 内置数据门户配置 --- */
+  var DEFAULT_TYPES_MAP = {
+    '交易平台BU': { id: 'bu', params: { time: 'hour' } },
+    '红包': { id: 'redReward' },
+    'BOD': { id: 'bod' },
+    '高校': { id: 'business/gx' },
+    '白领': { id: 'business/bl' },
+    '早餐': { id: 'breakfast' },
+    '城市补贴与优惠': { id: 'cityAllowance' },
+    '城市': { id: 'cityAllowance' }
+  };
+
+  var DEFAULT_ORIGIN = '/api/other/filter/';
+
+  var DEFAULT_STYLE_ORIGIN = '//npm.elemecdn.com/eleme-area-selector@' + VERSION + '/dist/style.css';
+  /* --- 内置数据门户配置 END --- */
 
   var DEFAULT_CONFIG = {
-    origin: '/api/other/filter/', // api url
-    styleCDN: '//npm.elemecdn.com/eleme-area-selector@0.1.20/dist/style.css', // style from CDN
-    typeMap: {
-      '交易平台BU': { id: 'bu', params: { time: 'hour' } },
-      '红包': { id: 'redReward' },
-      'BOD': { id: 'bod' },
-      '高校': { id: 'business/gx' },
-      '白领': { id: 'business/bl' },
-      '早餐': { id: 'breakfast' },
-      '城市补贴与优惠': { id: 'cityAllowance' },
-      '城市': { id: 'cityAllowance' }
-    },
+    api: DEFAULT_ORIGIN,
+    style: DEFAULT_STYLE_ORIGIN,
+    typeMap: DEFAULT_TYPES_MAP,
     onReady: null,
     onChange: null,
     onTypeChange: null,
-    types: ['交易平台BU'] // default display types
+    loadingMessage: ['正在加载资源...', '正在请求数据...'],
+    types: ['交易平台BU']
   };
 
   function AreaSelector(el, config) {
     this.el = el;
     this.config = Object.assign({}, DEFAULT_CONFIG, config);
-    this.init();
+    this.$init();
   }
 
-  AreaSelector.prototype = {
-    init: function() {
-      this.el.innerHTML = 'Loading Style...';
-      var _this = this;
-      this.__configStyle(function() {
-        _this.setCurrentType(_this.config.types[0]);
-      });
-    },
+  AreaSelector.version = VERSION;
 
-    __configStyle: function(callback) {
+  AreaSelector.prototype = {
+    $init: function() {
+      this.el.innerHTML = this.config.loadingMessage[0];
+
+      // has load ?
       if (!document.querySelector('[data-id=EAS-Style]')) {
-        var style = __createElement('link', { rel: 'stylesheet', href: this.config.styleCDN }, { id: 'EAS-Style' });
-        style.onload = callback;
-        document.head.appendChild(style);
+        var style = createElement('link', { rel: 'stylesheet', href: this.config.style }, { id: 'EAS-Style' });
+        var $self = this;
+        style.onload = function functionName() {
+          $self.$setCurrentType();
+        };
+        append(document.head, style);
       } else {
-        callback();
+        this.$setCurrentType();
       }
     },
 
-    setCurrentType: function(type) {
-      this.currentType = type;
-      this.refresh();
+    $setCurrentType: function(type) {
+      if (!type) { type = this.config.types[0] }
       if (this.config.onTypeChange) { this.config.onTypeChange(type) }
+
+      this.currentType = type;
+      this.$load();
     },
 
-    refresh: function() {
-      this.el.innerHTML = 'Loading Data...';
+    $load: function() {
+      this.el.innerHTML = this.config.loadingMessage[1];
       this.model = [];
       this.data = {};
       this.keyword = '';
       this.selects = {};
 
-      // is rebuild ?
-      if (!__isEmpty(this.refs)) {
+      // has build ?
+      if (!isEmpty(this.refs)) {
         this.$clear();
       }
 
-      if (__CACHE__[this.currentType]) {
-        this.__build(__CACHE__[this.currentType]);
+      this.refs = {};
+
+      if (DATA_CACHE[this.currentType]) {
+        this.$build(DATA_CACHE[this.currentType]);
       } else {
-        __fetchData({
-          url: this.config.origin + this.config.typeMap[this.currentType].id,
+        fetchData({
+          url: this.config.api + this.config.typeMap[this.currentType].id,
           params: this.config.typeMap[this.currentType].params
-        }, this.__build.bind(this));
+        }, this.$build.bind(this));
       }
     },
 
     $clear: function() {
-      this.__eventsHandlerRemove.forEach(function(item) { item() });
-      this.__eventsHandlerRemove = [];
+      this.$eventsHandlerRemove.forEach(function(item) { item() });
+      this.$eventsHandlerRemove = [];
 
-      __remove(this.refs.container);
-      __remove(this.refs.selectContainer);
-
-      this.refs = {};
+      remove(this.refs.container);
+      remove(this.refs.selectContainer);
     },
 
     $destroy: function() {
@@ -95,67 +103,67 @@
       this.config.onReady = null;
       this.config.onTypeChange = null;
 
-      var _this = this;
-      __forEach(this, function(key) {
+      var $self = this;
+      forEach(this, function(key) {
         if (typeof key === 'function') {
-          _this[key] = null;
+          $self[key] = null;
         }
       })
     },
 
-    __addEventListener: function(el, eventName, func) {
+    $addEventListener: function(el, eventName, func) {
       el.addEventListener(eventName, func);
-      this.__eventsHandlerRemove.push(function() { el.removeEventListener(eventName, func) });
+      this.$eventsHandlerRemove.push(function() { el.removeEventListener(eventName, func) });
     },
 
-    __build: function(data) {
+    $build: function(data) {
       this.data = data;
-      __CACHE__[this.currentType] = data;
+      DATA_CACHE[this.currentType] = data;
 
-      var refs = this.refs = {};
-      var _this = this;
-      this.__eventsHandlerRemove = [];
+      var refs = this.refs;
+      var $self = this;
+      this.$eventsHandlerRemove = [];
 
       // create basic element
-      refs.container = __createElement('div', { className: 'eas-container' });
-      refs.inputContainer = __createElement('div', { className: 'input-container' });
-      refs.typeBox = __createElement('div', { className: 'type-box' });
-      refs.type = __createElement('div', { className: 'current-type' });
-      refs.typeList = __createElement('ul', { className: 'type-list' });
-      refs.input = __createElement('input', { className: 'eas-input', type: 'search' });
+      refs.container = createElement('div', { className: 'eas-container' });
+      refs.inputContainer = createElement('div', { className: 'input-container' });
+      refs.typeBox = createElement('div', { className: 'type-box' });
+      refs.type = createElement('div', { className: 'current-type' });
+      refs.typeList = createElement('ul', { className: 'type-list' });
+      refs.input = createElement('input', { className: 'eas-input', type: 'search' });
 
-      refs.resultContainer = __createElement('div', { className: 'result-container' });
-      refs.clearAll = __createElement('div', { className: 'clear-all', innerHTML: '清除全部' });
-      refs.tags = __createElement('div', { className: 'eas-tags' });
+      refs.resultContainer = createElement('div', { className: 'result-container' });
+      refs.clearAll = createElement('div', { className: 'clear-all', innerHTML: '清除全部' });
+      refs.tags = createElement('div', { className: 'eas-tags' });
 
-      refs.selectContainer = __createElement('div', { className: 'eas-selects' });
+      refs.selectContainer = createElement('div', { className: 'eas-selects' });
 
       // build
       this.el.innerHTML = '';
-      __append(refs.container, refs.inputContainer, refs.resultContainer);
-      __append(refs.typeBox, refs.type, refs.typeList);
-      __append(refs.inputContainer, refs.typeBox, refs.input)
-      __append(refs.resultContainer, refs.tags, refs.clearAll);
+      append(refs.container, refs.inputContainer, refs.resultContainer);
+      append(refs.typeBox, refs.type, refs.typeList);
+      append(refs.inputContainer, refs.typeBox, refs.input)
+      append(refs.resultContainer, refs.tags, refs.clearAll);
 
       this.refs.type.innerHTML = this.currentType;
-      this.__buildTypeList();
+      this.$buildTypeList();
 
       // event handler
-      this.__addEventListener(document.body, 'click', function() { _this.hideSelect(0) });
+      this.$addEventListener(document.body, 'click', function() { $self.hideSelect(0) });
 
-      this.__addEventListener(this.refs.input, 'click', function(e) { _this.showSelect(); e.stopPropagation() });
+      this.$addEventListener(this.refs.input, 'click', function(e) { $self.$showSelect(); e.stopPropagation() });
 
-      this.__addEventListener(this.refs.input, 'input', function() { _this.search() });
+      this.$addEventListener(this.refs.input, 'input', function() { $self.$search() });
 
-      this.__addEventListener(this.refs.clearAll, 'click', function() { _this.clearAll() });
+      this.$addEventListener(this.refs.clearAll, 'click', function() { $self.$clearAll() });
 
-      __delegate(this.refs.typeList, 'type-list-item', 'click', function(target) {
-        _this.setCurrentType(target.textContent)
+      delegate(this.refs.typeList, 'type-list-item', 'click', function(target) {
+        $self.$setCurrentType(target.textContent)
       }, true);
 
-      __delegate(this.refs.selectContainer, 'eas-select-item', 'mousemove', function(target) {
-        if (target === this.__lastMouseMoveTarget) { return; }
-        this.__lastMouseMoveTarget = target;
+      delegate(this.refs.selectContainer, 'eas-select-item', 'mousemove', function(target) {
+        if (target === this.$lastMouseMoveTarget) { return; }
+        this.$lastMouseMoveTarget = target;
 
         [].slice.call(target.parentNode.children).forEach(function(child) {
           if (child.classList.contains('hover')) {
@@ -165,53 +173,53 @@
         target.classList.add('hover');
 
         var level = target.parentNode.dataset.level;
-        var targetData = _this.selects[level].data[__getIndex(target)];
-        _this.showSelect(_this.selects[level], targetData);
+        var targetData = $self.selects[level].data[getIndex(target)];
+        $self.$showSelect($self.selects[level], targetData);
       });
 
-      __delegate(this.refs.selectContainer, 'eas-select-item', 'click', function(target) {
-        _this.__selectItem(_this.selects[target.parentNode.dataset.level].display[__getIndex(target)]);
+      delegate(this.refs.selectContainer, 'eas-select-item', 'click', function(target) {
+        $self.$selectItem($self.selects[target.parentNode.dataset.level].display[getIndex(target)]);
         target.classList.add('selected');
       }, true);
 
-      __delegate(this.refs.tags, 'eas-tag', 'click', function(target) {
-        _this.__removeItem(__getIndex(target));
+      delegate(this.refs.tags, 'eas-tag', 'click', function(target) {
+        $self.removeItem(getIndex(target));
       });
 
       // append to page
-      __append(document.body, refs.selectContainer);
-      __append(this.el, refs.container);
+      append(document.body, refs.selectContainer);
+      append(this.el, refs.container);
 
       // build main select
-      this.__buildMainSelelt();
+      this.$buildMainSelelt();
 
       // set default select item
       this.data[0][0].forEach(function(item) {
-        _this.__selectItem(item);
+        $self.$selectItem(item);
       });
 
       if (this.config.onReady) { this.config.onReady() }
     },
 
-    __buildTypeList: function() {
-      var _this = this;
+    $buildTypeList: function() {
+      var $self = this;
       if (this.config.types.length > 1) {
-        __forEach(this.config.types, function(item) {
-          __append(_this.refs.typeList, __createElement('li', { className: 'type-list-item', innerHTML: item }));
+        forEach(this.config.types, function(item) {
+          append($self.refs.typeList, createElement('li', { className: 'type-list-item', innerHTML: item }));
         });
         this.refs.type.classList.add('list');
       } else {
-        __remove(this.refs.typeList);
+        remove(this.refs.typeList);
       }
     },
 
-    __buildMainSelelt: function() {
+    $buildMainSelelt: function() {
       // put all tree items into one Array
       var level = 0;
       var all = [];
       while (this.data[level]) {
-        __forEach(this.data[level], function(node) {
-          __forEach(node, function(item) {
+        forEach(this.data[level], function(node) {
+          forEach(node, function(item) {
             item.level = level;
             all.push(item);
           })
@@ -222,17 +230,17 @@
 
       // calculate select position top
       var rect = this.refs.input.getBoundingClientRect();
-      this.__selectTop = rect.top + rect.height;
+      this.$selectTop = rect.top + rect.height;
 
-      var el = this.__generateSelect(0);
+      var el = this.$generateSelect(0);
       el.style.left = rect.left - 1 + 'px';
-      el.style.top = this.__selectTop + 'px';
+      el.style.top = this.$selectTop + 'px';
       el.style.display = 'none';
 
-      __append(this.refs.selectContainer, el);
+      append(this.refs.selectContainer, el);
     },
 
-    showSelect: function(previousSelect, parentData) {
+    $showSelect: function(previousSelect, parentData) {
       if (!previousSelect) {
         this.refreshMainSelect();
         this.selects[0].el.style.display = 'block';
@@ -243,11 +251,11 @@
           return;
         }
 
-        var el = this.__generateSelect(parentData.level + 1, parentData.i);
+        var el = this.$generateSelect(parentData.level + 1, parentData.i);
         var rect = previousSelect.el.getBoundingClientRect();
-        el.style.top = this.__selectTop + 'px';
+        el.style.top = this.$selectTop + 'px';
         el.style.left = rect.left + rect.width - 1 + 'px';
-        __append(this.refs.selectContainer, el);
+        append(this.refs.selectContainer, el);
       }
     },
 
@@ -258,28 +266,28 @@
       }
       for (; level < this.data.struct.length; level++) {
         if (this.selects[level]) {
-          __remove(this.selects[level].el);
+          remove(this.selects[level].el);
           this.selects[level] = null;
         }
       }
     },
 
     refreshMainSelect: function() {
-      var _this = this;
+      var $self = this;
       var data = this.data.all;
       if (this.keyword) {
         data = this.data.all.filter(function(item) {
-          return item.n.toUpperCase().indexOf(_this.keyword.toUpperCase()) > -1;
+          return item.n.toUpperCase().indexOf($self.keyword.toUpperCase()) > -1;
         });
       }
-      this.__generateSelect(0, 0, data);
+      this.$generateSelect(0, 0, data);
     },
 
-    __generateSelect: function(level, parentId, presetData) {
+    $generateSelect: function(level, parentId, presetData) {
       if (!this.data[level]) { return; }
       if (level === 0) { parentId = 0; }
 
-      var el = __createElement('ul', { className: 'eas-select' }, { level: level });
+      var el = createElement('ul', { className: 'eas-select' }, { level: level });
       var data = this.data[level][parentId];
       if (level === 0) {
         data = this.data.all;
@@ -290,7 +298,7 @@
 
       var model = { el: el, data: data, level: level };
       var collections = new DocumentFragment();
-      var _this = this;
+      var $self = this;
       model.display = data;
 
       if (data.length > 200) {
@@ -300,19 +308,19 @@
           if (this.scrollTop / 27 + 20 > model.display.length) {
             var additons = new DocumentFragment();
             model.data.slice(model.display.length - 1, model.display.length + 200).forEach(function(item) {
-              __append(additons, _this.__generateSelectItem(item));
+              append(additons, $self.$generateSelectItem(item));
             })
-            __append(this, additons);
+            append(this, additons);
             model.display = model.data.slice(0, model.display.length + 200);
           }
         })
       }
 
       model.display.forEach(function(item) {
-        __append(collections, _this.__generateSelectItem(item));
+        append(collections, $self.$generateSelectItem(item));
       });
 
-      __append(el, collections);
+      append(el, collections);
 
       if (this.selects[level] && this.selects[level].el) {
         Object.assign(el.style, this.selects[level].el.style);
@@ -322,14 +330,14 @@
       return el;
     },
 
-    __generateSelectItem: function(data) {
+    $generateSelectItem: function(data) {
       var className = 'eas-select-item';
       if (this.model.some(function(item) {
         return item.i === data.i && item.level === data.level;
       })) {
         className += ' selected';
       }
-      var el = __createElement('li', { className: className });
+      var el = createElement('li', { className: className });
       el.innerHTML = '<small>' + data.level + '</small><i>' + this.data.struct[data.level] + '</i><span>' + data.n + '</span>';
       return el;
     },
@@ -342,15 +350,15 @@
       }
     },
 
-    __selectItem: function(item) {
+    $selectItem: function(item) {
       if (!this.model.some(function(i) { return i.i === item.i && i.level === item.level; })) {
         this.model.unshift(item);
         this.setCurrentLevel(item.level);
-        this.refreshModel();
+        this.$refreshModel();
       }
     },
 
-    __removeItem: function(index) {
+    removeItem: function(index) {
       this.model.splice(index, 1);
       var level = this.currentLevel;
 
@@ -361,12 +369,12 @@
           this.setCurrentLevel(Math.max.apply(null, this.model.map(function(item) { return item.level })));
         }
       }
-      this.refreshModel();
+      this.$refreshModel();
     },
 
-    clearAll: function() {
+    $clearAll: function() {
       this.model = [];
-      this.refreshModel();
+      this.$refreshModel();
     },
 
     getModel: function() {
@@ -380,7 +388,7 @@
       return model;
     },
 
-    refreshModel: function() {
+    $refreshModel: function() {
       var level = this.currentLevel;
       this.refs.tags.innerHTML = this.model.map(function(item) {
         var className = 'eas-tag';
@@ -393,15 +401,15 @@
       if (this.config.onChange) { this.config.onChange() }
     },
 
-    search: function() {
+    $search: function() {
       this.keyword = this.refs.input.value.trim();
-      this.showSelect();
+      this.$showSelect();
     }
   }
 
 
   /* ---- utils ---- */
-  function __append() {
+  function append() {
     var args = Array.prototype.slice.call(arguments);
     var parent = args.shift();
     args.forEach(function(child) {
@@ -409,7 +417,7 @@
     })
   }
 
-  function __remove(el) {
+  function remove(el) {
     if (!el) {
       return;
     }
@@ -420,18 +428,18 @@
     }
   }
 
-  function __isEmpty(obj) {
+  function isEmpty(obj) {
     for (var key in obj) {
       return false;
     }
     return true;
   }
 
-  function __getIndex(node) {
+  function getIndex(node) {
     return [].indexOf.call(node.parentNode.children, node);
   }
 
-  function __createElement(tagName, params, attrs) {
+  function createElement(tagName, params, attrs) {
     var el = document.createElement(tagName);
     if (params) {
       Object.assign(el, params);
@@ -442,7 +450,7 @@
     return el;
   }
 
-  function __convertParamsToString(params) {
+  function convertParamsToString(params) {
     if (!params) {
       return '';
     }
@@ -451,7 +459,7 @@
     }).join('&');
   }
 
-  function __fetchData(config, callback) {
+  function fetchData(config, callback) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
@@ -472,11 +480,11 @@
     }
 
     xhr.withCredentials = true;
-    xhr.open(config.method || 'GET', config.url + __convertParamsToString(config.params));
+    xhr.open(config.method || 'GET', config.url + convertParamsToString(config.params));
     xhr.send();
   }
 
-  function __delegate(el, className, eventName, callback, stop) {
+  function delegate(el, className, eventName, callback, stop) {
     el.addEventListener(eventName, function(e) {
       var target = e.target;
       while (target && target !== el) {
@@ -491,7 +499,7 @@
     });
   }
 
-  function __forEach(target, callback) {
+  function forEach(target, callback) {
     if (!target) {
       return;
     }
