@@ -1,6 +1,6 @@
 ;(function(){
 
-  var VERSION = '0.1.21';
+  var VERSION = '0.2.1';
 
   var DATA_CACHE = {};
 
@@ -18,18 +18,29 @@
 
   var DEFAULT_ORIGIN = '/api/other/filter/';
 
+  var DEFAULT_RESPONSE_HANDLER = function (res, callback) {
+    if (res.data && res.code === 200) {
+      callback(res.data);
+    } else {
+      console.error(res.code, res.message);
+    }
+  }
+
   var DEFAULT_STYLE_ORIGIN = '//npm.elemecdn.com/eleme-area-selector@' + VERSION + '/dist/style.css';
   /* --- 内置数据门户配置 END --- */
 
   var DEFAULT_CONFIG = {
     api: DEFAULT_ORIGIN,
     style: DEFAULT_STYLE_ORIGIN,
+    selectItemStyle: { height: 27, display: 20 },
+    selectSliceLength: 200,
     typeMap: DEFAULT_TYPES_MAP,
     onReady: null,
     onChange: null,
     onTypeChange: null,
     loadingMessage: ['正在加载资源...', '正在请求数据...'],
-    types: ['交易平台BU']
+    types: ['交易平台BU'],
+    responseHandler: DEFAULT_RESPONSE_HANDLER
   };
 
   function AreaSelector(el, config) {
@@ -85,7 +96,13 @@
         fetchData({
           url: this.config.api + this.config.typeMap[this.currentType].id,
           params: this.config.typeMap[this.currentType].params
-        }, this.$build.bind(this));
+        }, (function(data) {
+          if (this.config.responseHandler) {
+            this.config.responseHandler(data, this.$build.bind(this));
+          } else {
+            this.$build(data);
+          }
+        }).bind(this));
       }
     },
 
@@ -149,7 +166,7 @@
       this.$buildTypeList();
 
       // event handler
-      this.$addEventListener(document.body, 'click', function() { $self.hideSelect(0) });
+      this.$addEventListener(document.body, 'click', function() { $self.$hideSelect(0) });
 
       this.$addEventListener(this.refs.input, 'click', function(e) { $self.$showSelect(); e.stopPropagation() });
 
@@ -183,7 +200,7 @@
       }, true);
 
       delegate(this.refs.tags, 'eas-tag', 'click', function(target) {
-        $self.removeItem(getIndex(target));
+        $self.$removeItem(getIndex(target));
       });
 
       // append to page
@@ -242,11 +259,11 @@
 
     $showSelect: function(previousSelect, parentData) {
       if (!previousSelect) {
-        this.refreshMainSelect();
+        this.$refreshMainSelect();
         this.selects[0].el.style.display = 'block';
-        this.hideSelect(1);
+        this.$hideSelect(1);
       } else {
-        this.hideSelect(previousSelect.level + 1);
+        this.$hideSelect(previousSelect.level + 1);
         if (parentData.level >= this.data.struct.length - 1) {
           return;
         }
@@ -259,7 +276,7 @@
       }
     },
 
-    hideSelect: function(level) {
+    $hideSelect: function(level) {
       if (level === 0) {
         this.selects[0].el.style.display = 'none';
         level++;
@@ -272,7 +289,7 @@
       }
     },
 
-    refreshMainSelect: function() {
+    $refreshMainSelect: function() {
       var $self = this;
       var data = this.data.all;
       if (this.keyword) {
@@ -296,31 +313,36 @@
         data = presetData;
       }
 
-      var model = { el: el, data: data, level: level };
-      var collections = new DocumentFragment();
+      var model = { el: el, data: data, level: level, display: data, fullLoaded: true };
       var $self = this;
-      model.display = data;
+      var slice = this.config.selectSliceLength;
+      var itemHeight = this.config.selectItemStyle.height;
+      var itemDisplay = this.config.selectItemStyle.display;
 
-      if (data.length > 200) {
-        model.display = data.slice(0, 200);
+      // load more while needed
+      if (data.length > slice) {
+        model.fullLoaded = false;
+        model.display = data.slice(0, slice);
 
         el.addEventListener('scroll', function() {
-          if (this.scrollTop / 27 + 20 > model.display.length) {
-            var additons = new DocumentFragment();
-            model.data.slice(model.display.length - 1, model.display.length + 200).forEach(function(item) {
-              append(additons, $self.$generateSelectItem(item));
+          if (model.fullLoaded) { return }
+
+          if (this.scrollTop / itemHeight + itemDisplay > model.display.length) {
+            model.data.slice(model.display.length - 1, model.display.length + slice).forEach(function(item) {
+              append(el, $self.$generateSelectItem(item));
             })
-            append(this, additons);
-            model.display = model.data.slice(0, model.display.length + 200);
+            model.display = model.data.slice(0, model.display.length + slice);
+
+            if (model.display >= model.data) {
+              model.fullLoaded = true;
+            }
           }
         })
       }
 
       model.display.forEach(function(item) {
-        append(collections, $self.$generateSelectItem(item));
+        append(el, $self.$generateSelectItem(item));
       });
-
-      append(el, collections);
 
       if (this.selects[level] && this.selects[level].el) {
         Object.assign(el.style, this.selects[level].el.style);
@@ -342,7 +364,7 @@
       return el;
     },
 
-    setCurrentLevel: function(level) {
+    $setCurrentLevel: function(level) {
       if (level > 0 && level < this.data.struct.length) {
         this.currentLevel = level;
       } else {
@@ -353,20 +375,20 @@
     $selectItem: function(item) {
       if (!this.model.some(function(i) { return i.i === item.i && i.level === item.level; })) {
         this.model.unshift(item);
-        this.setCurrentLevel(item.level);
+        this.$setCurrentLevel(item.level);
         this.$refreshModel();
       }
     },
 
-    removeItem: function(index) {
+    $removeItem: function(index) {
       this.model.splice(index, 1);
       var level = this.currentLevel;
 
       if (this.model.length === 0) {
-        this.setCurrentLevel(0);
+        this.$setCurrentLevel(0);
       } else {
         if (!this.model.some(function(item) { return item.level === level })) {
-          this.setCurrentLevel(Math.max.apply(null, this.model.map(function(item) { return item.level })));
+          this.$setCurrentLevel(this.model[0].level);
         }
       }
       this.$refreshModel();
@@ -410,7 +432,7 @@
 
   /* ---- utils ---- */
   function append() {
-    var args = Array.prototype.slice.call(arguments);
+    var args = [].slice.call(arguments);
     var parent = args.shift();
     args.forEach(function(child) {
       parent.appendChild(child);
@@ -466,8 +488,8 @@
       if (xhr.readyState === 4 && xhr.status === 200) {
         if (xhr.responseText) {
           var json = JSON.parse(xhr.responseText);
-          if (json.code === 200 && json.data) {
-            callback(json.data);
+          if (json) {
+            callback(json);
           } else {
             console.error(json);
           }
