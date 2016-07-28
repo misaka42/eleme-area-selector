@@ -9,7 +9,7 @@
 #### 引用
 
 ```html
-<script src="//npm.elemecdn.com/eleme-area-selector@0.1.20/dist/index.min.js"></script>
+<script src="//npm.elemecdn.com/eleme-area-selector@0.2.1/dist/index.min.js"></script>
 ```
 
 #### 配置
