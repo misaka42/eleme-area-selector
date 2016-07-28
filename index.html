@@ -18,11 +18,18 @@
 </head>
 <body>
   <div id="app"></div>
+
+  <button onclick="destroy()">destroy</button>
   <script>
     window.onload = function () {
-      var as = new AreaSelector(document.getElementById('app'), {
-        types: ['交易平台BU', '红包']
+      as = new AreaSelector(document.getElementById('app'), {
+        types: ['交易平台BU', '红包'],
+        cache: true
       });
+    }
+
+    window.destroy = function () {
+      as.$destroy();
     }
   </script>
 </body>

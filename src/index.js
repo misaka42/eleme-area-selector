@@ -40,6 +40,8 @@
     onTypeChange: null,
     loadingMessage: ['正在加载资源...', '正在请求数据...'],
     types: ['交易平台BU'],
+    cache: false,
+    cacheKey: 'EAS-CACHE',
     responseHandler: DEFAULT_RESPONSE_HANDLER
   };
 
@@ -54,6 +56,7 @@
   AreaSelector.prototype = {
     $init: function() {
       this.el.innerHTML = this.config.loadingMessage[0];
+      this.$initCache();
 
       // has load ?
       if (!document.querySelector('[data-id=EAS-Style]')) {
@@ -116,6 +119,7 @@
 
     $destroy: function() {
       this.$clear();
+      this.$saveCache();
       this.config.onChange = null;
       this.config.onReady = null;
       this.config.onTypeChange = null;
@@ -210,8 +214,19 @@
       // build main select
       this.$buildMainSelelt();
 
-      // set default select item
-      this.data[0][0].forEach(function(item) {
+      // set default select item or load from cache
+      var defaultSelects = this.data[0][0];
+      var model = defaultSelects;
+
+      if (this.config.cache) {
+        if (this.cache && this.cache[location.pathname] && this.cache[location.pathname][this.currentType]) {
+          var model = Object.assign([], this.cache[location.pathname][this.currentType]);
+          if (model.length === 0) {
+            model = defaultSelects;
+          }
+        }
+      }
+      model.reverse().forEach(function(item) {
         $self.$selectItem(item);
       });
 
@@ -420,7 +435,35 @@
         return '<li class="' + className + '"><span>' + item.n + '</span><i></i></li>';
       }).join('');
 
+      this.$setCache();
       if (this.config.onChange) { this.config.onChange() }
+    },
+
+    $initCache: function() {
+      var cache = window.localStorage.getItem(this.config.cacheKey);
+      var json = {};
+      if (cache) {
+        try {
+          json = JSON.parse(cache);
+          this.cache = json;
+        } catch (e) {
+          this.cache = {};
+        }
+      } else {
+        this.cache = {};
+      }
+    },
+
+    $setCache: function() {
+      // todo: call only once after type change
+      if (!this.cache[window.location.pathname]) {
+        this.cache[window.location.pathname] = {};
+      }
+      this.cache[window.location.pathname][this.currentType] = Object.assign([], this.model);
+    },
+
+    $saveCache: function() {
+      window.localStorage.setItem(this.config.cacheKey, JSON.stringify(this.cache));
     },
 
     $search: function() {
