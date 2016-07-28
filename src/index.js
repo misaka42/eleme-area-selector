@@ -1,6 +1,6 @@
 ;(function(){
 
-  var VERSION = '0.2.6';
+  var VERSION = '0.2.7';
 
   var DATA_CACHE = {};
 
@@ -263,24 +263,12 @@
         level++;
       }
       this.data.all = all;
-
-      // calculate select position top
-      var rect = this.refs.input.getBoundingClientRect();
-      this.$selectTop = rect.top + rect.height;
-
-      var el = this.$generateSelect(0);
-      el.style.left = rect.left - 1 + 'px';
-      el.style.top = this.$selectTop + 'px';
-      el.style.display = 'none';
-
-      append(this.refs.selectContainer, el);
     },
 
     $showSelect: function(previousSelect, parentData) {
       if (!previousSelect) {
-        this.$refreshMainSelect();
-        this.selects[0].el.style.display = 'block';
         this.$hideSelect(1);
+        this.$refreshMainSelect();
       } else {
         this.$hideSelect(previousSelect.level + 1);
         if (parentData.level >= this.data.struct.length - 1) {
@@ -296,10 +284,6 @@
     },
 
     $hideSelect: function(level) {
-      if (level === 0) {
-        this.selects[0].el.style.display = 'none';
-        level++;
-      }
       for (; level < this.data.struct.length; level++) {
         if (this.selects[level]) {
           remove(this.selects[level].el);
@@ -316,7 +300,14 @@
           return item.n.toUpperCase().indexOf($self.keyword.toUpperCase()) > -1;
         });
       }
-      this.$generateSelect(0, 0, data);
+      var rect = this.refs.input.getBoundingClientRect();
+      this.$selectTop = rect.top + rect.height;
+
+      var el = this.$generateSelect(0, 0, data);
+      el.style.left = rect.left - 1 + 'px';
+      el.style.top = this.$selectTop + 'px';
+
+      append(this.refs.selectContainer, el);
     },
 
     $generateSelect: function(level, parentId, presetData) {
