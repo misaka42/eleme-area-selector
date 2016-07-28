@@ -215,14 +215,13 @@
       this.$buildMainSelelt();
 
       // set default select item or load from cache
-      var defaultSelects = this.data[0][0];
-      var model = defaultSelects;
+      var model = this.data[0][0];
 
       if (this.config.cache) {
         if (this.cache && this.cache[location.pathname] && this.cache[location.pathname][this.currentType]) {
-          var model = Object.assign([], this.cache[location.pathname][this.currentType]);
+          model = Object.assign([], this.cache[location.pathname][this.currentType]);
           if (model.length === 0) {
-            model = defaultSelects;
+            model = this.data[0][0];
           }
         }
       }
@@ -416,7 +415,7 @@
 
     getModel: function() {
       if (!this.model.length) {
-        return { level: '', data: '' };
+        return { level: 1, data: '' };
       }
       var model = {};
       var level = this.currentLevel;
