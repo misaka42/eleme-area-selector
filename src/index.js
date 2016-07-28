@@ -218,6 +218,11 @@
       var model = this.data[0][0];
 
       if (this.config.cache) {
+        // add save event
+        window.addEventListener('unload', function() {
+          $self.$saveCache();
+        });
+
         if (this.cache && this.cache[location.pathname] && this.cache[location.pathname][this.currentType]) {
           model = Object.assign([], this.cache[location.pathname][this.currentType]);
           if (model.length === 0) {
