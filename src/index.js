@@ -110,7 +110,7 @@
     },
 
     $clear: function() {
-      this.$eventsHandlerRemove.forEach(function(item) { item() });
+      forEach(this.$eventsHandlerRemove, function(item) { item() });
       this.$eventsHandlerRemove = [];
 
       remove(this.refs.container);
@@ -142,7 +142,7 @@
       if (isEmpty(data)) {
         return;
       }
-      
+
       this.data = data;
       DATA_CACHE[this.currentType] = data;
 
@@ -191,7 +191,7 @@
         if (target === this.$lastMouseMoveTarget) { return; }
         this.$lastMouseMoveTarget = target;
 
-        [].slice.call(target.parentNode.children).forEach(function(child) {
+        forEach([].slice.call(target.parentNode.children), function(child) {
           if (child.classList.contains('hover')) {
             child.classList.remove('hover');
           }
@@ -235,7 +235,7 @@
           }
         }
       }
-      model.reverse().forEach(function(item) {
+      forEach(model.reverse(), function(item) {
         $self.$selectItem(item);
       });
 
@@ -343,9 +343,9 @@
           if (model.fullLoaded) { return }
 
           if (this.scrollTop / itemHeight + itemDisplay > model.display.length) {
-            model.data.slice(model.display.length - 1, model.display.length + slice).forEach(function(item) {
+            forEach(model.data.slice(model.display.length - 1, model.display.length + slice), function(item) {
               append(el, $self.$generateSelectItem(item));
-            })
+            });
             model.display = model.data.slice(0, model.display.length + slice);
 
             if (model.display >= model.data) {
@@ -355,7 +355,7 @@
         })
       }
 
-      model.display.forEach(function(item) {
+      forEach(model.display, function(item) {
         append(el, $self.$generateSelectItem(item));
       });
 
@@ -477,9 +477,7 @@
   function append() {
     var args = [].slice.call(arguments);
     var parent = args.shift();
-    args.forEach(function(child) {
-      parent.appendChild(child);
-    })
+    forEach(args, function(child) { parent.appendChild(child) });
   }
 
   function remove(el) {
