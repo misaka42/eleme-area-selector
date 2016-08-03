@@ -138,6 +138,11 @@
     },
 
     $build: function(data) {
+      // permission denied
+      if (isEmpty(data)) {
+        return;
+      }
+      
       this.data = data;
       DATA_CACHE[this.currentType] = data;
 
