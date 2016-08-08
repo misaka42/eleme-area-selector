@@ -1,6 +1,6 @@
 ;(function(){
 
-  var VERSION = '0.2.10';
+  var VERSION = '0.2.11';
 
   var DATA_CACHE = {};
 
@@ -18,15 +18,6 @@
 
   var DEFAULT_ORIGIN = '/api/other/filter/';
 
-  var DEFAULT_RESPONSE_HANDLER = function (res, callback, error) {
-    if (res.data && res.code === 200) {
-      callback(res.data);
-    } else {
-      console.error(res.code, res.message);
-      error && error(res);
-    }
-  }
-
   var DEFAULT_STYLE_ORIGIN = '//npm.elemecdn.com/eleme-area-selector@' + VERSION + '/dist/style.css';
   /* --- 内置数据门户配置 END --- */
 
@@ -39,12 +30,11 @@
     onReady: null,
     onChange: null,
     onTypeChange: null,
-    onPermissionDenied: null,
     loadingMessage: ['正在加载资源...', '正在请求数据...'],
     types: ['交易平台BU'],
     cache: false,
     cacheKey: 'EAS-CACHE',
-    responseHandler: DEFAULT_RESPONSE_HANDLER
+    responseHandler: null
   };
 
   function AreaSelector(el, config) {
@@ -103,7 +93,7 @@
           params: this.config.typeMap[this.currentType].params
         }, (function(data) {
           if (this.config.responseHandler) {
-            this.config.responseHandler(data, this.$build.bind(this), this.onPermissionDenied);
+            this.config.responseHandler(data, this.$build.bind(this));
           } else {
             this.$build(data);
           }
