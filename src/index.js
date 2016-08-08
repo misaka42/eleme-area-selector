@@ -39,7 +39,7 @@
 
   function AreaSelector(el, config) {
     this.el = el;
-    this.config = Object.assign({}, DEFAULT_CONFIG, config);
+    this.config = merge({}, DEFAULT_CONFIG, config);
     this.$init();
   }
 
@@ -221,7 +221,7 @@
         });
 
         if (this.cache && this.cache[location.pathname] && this.cache[location.pathname][this.currentType]) {
-          model = Object.assign([], this.cache[location.pathname][this.currentType]);
+          model = merge([], this.cache[location.pathname][this.currentType]);
           if (model.length === 0) {
             model = this.data[0][0];
           }
@@ -352,7 +352,7 @@
       });
 
       if (this.selects[level] && this.selects[level].el) {
-        Object.assign(el.style, this.selects[level].el.style);
+        merge(el.style, this.selects[level].el.style);
         this.refs.selectContainer.replaceChild(el, this.selects[level].el);
       }
       this.selects[level] = model;
@@ -451,7 +451,7 @@
       if (!this.cache[window.location.pathname]) {
         this.cache[window.location.pathname] = {};
       }
-      this.cache[window.location.pathname][this.currentType] = Object.assign([], this.model);
+      this.cache[window.location.pathname][this.currentType] = merge([], this.model);
     },
 
     $saveCache: function() {
@@ -497,10 +497,10 @@
   function createElement(tagName, params, attrs) {
     var el = document.createElement(tagName);
     if (params) {
-      Object.assign(el, params);
+      merge(el, params);
     }
     if (attrs) {
-      Object.assign(el.dataset, attrs);
+      merge(el.dataset, attrs);
     }
     return el;
   }
@@ -552,6 +552,24 @@
         target = target.parentNode;
       }
     });
+  }
+
+  function merge() {
+    if (typeof Object.assign === 'function') {
+      return Object.assign.apply(null, arguments);
+    } else {
+      var args = [].slice.call(arguments);
+      var target = args.shift();
+      if (!target) {
+        target = {};
+      }
+      args.forEach(function(obj) {
+        for (var key in obj) {
+          target[key] = obj[key];
+        }
+      })
+      return target;
+    }
   }
 
   function forEach(target, callback) {
