@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/eleme-area-selector.svg)](https://badge.fury.io/js/eleme-area-selector)
+
 # eleme-area-selector
 
 ### 简介
