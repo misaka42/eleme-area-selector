@@ -1,6 +1,6 @@
 {
   "name": "eleme-area-selector",
-  "version": "0.2.12",
+  "version": "0.3.0",
   "description": "### description",
   "main": "dist/index.min.js",
   "scripts": {
