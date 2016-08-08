@@ -1,3 +1,5 @@
+[![NPM](https://nodei.co/npm/eleme-area-selector.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/eleme-area-selector/)
+
 [![npm version](https://badge.fury.io/js/eleme-area-selector.svg)](https://badge.fury.io/js/eleme-area-selector)
 
 # eleme-area-selector
