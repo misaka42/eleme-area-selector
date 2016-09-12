@@ -1,6 +1,6 @@
 ;(function(){
 
-  var VERSION = '0.2.11';
+  var VERSION = '0.4.0';
 
   var DATA_CACHE = {};
 
