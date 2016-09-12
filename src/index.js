@@ -264,11 +264,9 @@
         this.$refreshMainSelect();
       } else {
         this.$hideSelect(previousSelect.level + 1);
-        if (parentData.level >= this.data.struct.length - 1) {
-          return;
-        }
-
+        if (parentData.level >= this.data.struct.length - 1) { return; }
         var el = this.$generateSelect(parentData.level + 1, parentData.i);
+        if (!el) { return; }
         var rect = previousSelect.el.getBoundingClientRect();
         el.style.top = this.$selectTop + 'px';
         el.style.left = rect.left + rect.width - 1 + 'px';
@@ -306,6 +304,7 @@
     $generateSelect: function(level, parentId, presetData) {
       if (!this.data[level]) { return; }
       if (level === 0) { parentId = 0; }
+      if (!this.data[level][parentId]) { return; }
 
       var el = createElement('ul', { className: 'eas-select' }, { level: level });
       var data = this.data[level][parentId];

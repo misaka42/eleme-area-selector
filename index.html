@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>demo</title>
-  <script src="./src/index.js"></script>
-  <style>
+<meta charset="UTF-8">
+<title>demo</title>
+
+<style>
     html, body {
       width: 100%;
       height: 100%;
@@ -14,23 +14,30 @@
     #app {
       margin: 50px;
     }
-  </style>
+</style>
 </head>
 <body>
-  <div id="app"></div>
-
-  <button onclick="destroy()">destroy</button>
-  <script>
+<div id="app"></div>
+<button onclick="destroy()">destroy</button>
+<script src="/src/index.js">
+</script>
+<script>
     window.onload = function () {
       as = new AreaSelector(document.getElementById('app'), {
-        types: ['交易平台BU', '红包'],
-        cache: true
+        api: '/api/',
+        types: ['test'],
+        typeMap: { test: { id: 'ubt/app/entrance/filter' } },
+        responseHandler: (data, success) => {
+          if (data && data.code === 200 && data.data) {
+            success(data.data)
+          }
+        }
       });
     }
 
     window.destroy = function () {
       as.$destroy();
     }
-  </script>
+</script>
 </body>
 </html>
