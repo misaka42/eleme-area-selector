@@ -1,7 +1,5 @@
 ;(function(){
 
-  var VERSION = '0.4.0';
-
   var DATA_CACHE = {};
 
   /* --- 内置数据门户配置 --- */
@@ -18,7 +16,7 @@
 
   var DEFAULT_ORIGIN = '/api/other/filter/';
 
-  var DEFAULT_STYLE_ORIGIN = '//npm.elemecdn.com/eleme-area-selector@' + VERSION + '/dist/style.css';
+  var DEFAULT_STYLE_ORIGIN = '//unpkg.com/eleme-area-selector/dist/style.css';
   /* --- 内置数据门户配置 END --- */
 
   var DEFAULT_CONFIG = {
@@ -42,8 +40,6 @@
     this.config = merge({}, DEFAULT_CONFIG, config);
     this.$init();
   }
-
-  AreaSelector.version = VERSION;
 
   AreaSelector.prototype = {
     $init: function() {
