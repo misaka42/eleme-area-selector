@@ -31,8 +31,8 @@ npm i eleme-area-selector
 
 | 参数名 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| api | 所有内置数据类型的 base url，需要使用自定义类型时才需要修改 | String | /api/other/filter/ |
-| style | 样式文件的 CDN 地址 | String | //unpkg.com/eleme-area-selector/dist/style.css |
+| api | 所有内置数据类型的 base url，需要使用自定义类型时才需要修改 | String | `/api/other/filter/` |
+| style | 样式文件的 CDN 地址 | String | `//unpkg.com/eleme-area-selector/dist/style.css` |
 | selectItemStyle | 列表中单位的高度和按需加载的单位 | Object | { height: 27, display: 20 } |
 | selectSliceLength | 开启按需加载的列表长度，超过这个数值则开启按需加载 | Number | 200 |
 | typeMap | 内置的数据门户常用过滤器类型(以前他们说绝对不加新的了 WTF | Object | [see]( #内置类型列表 ) |
