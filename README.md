@@ -25,19 +25,19 @@
 
 ###### options 参数
 
-| 参数名 | 说明 | 默认值 |
-| --- | --- | --- |
-| api | 所有内置数据类型的 base url，需要使用自定义类型时才需要修改 | (String) /api/other/filter/ |
-| style | 样式文件的 CDN 地址 | (String) //unpkg.com/eleme-area-selector/dist/style.css |
-| selectItemStyle | 列表中单位的高度和按需加载的单位 | (Object) { height: 27, display: 20 } |
-| selectSliceLength | 开启按需加载的列表长度，超过这个数值则开启按需加载 | (Number) 200 |
-| typeMap | 内置的数据门户常用过滤器类型(以前他们说绝对不加新的了 WTF) | (see)[ #内置类型列表 ] |
-| types | 当前实例展示的可选类型，大于 1 个时会显示一个下拉菜单供选择(如果不需要，可以直接使用样式来隐藏) | (Array) ['交易平台BU'] |
-| onReady | 数据加载完毕，默认选项有值 | (Function) null |
-| onChange | 选项的选中状态发生了改变 | (Function) null |
-| onTypeChange | 用户通过下拉菜单改变了 type 值 | (Function) null |
-| loadingMessage | 文案 | (Array) ['正在加载资源...', '正在请求数据...'] |
-| responseHandler | 得到返回数据后的处理函数，会传入两个参数，第一个为接口返回的原始数据，第二个为后续的 Build 方法，需要把处理完成后的数据传递进去 | (Function) null |
+| 参数名 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| api | 所有内置数据类型的 base url，需要使用自定义类型时才需要修改 | String | /api/other/filter/ |
+| style | 样式文件的 CDN 地址 | String | //unpkg.com/eleme-area-selector/dist/style.css |
+| selectItemStyle | 列表中单位的高度和按需加载的单位 | Object | { height: 27, display: 20 } |
+| selectSliceLength | 开启按需加载的列表长度，超过这个数值则开启按需加载 | Number | 200 |
+| typeMap | 内置的数据门户常用过滤器类型(以前他们说绝对不加新的了 WTF | Object | see)[ #内置类型列表 ] |
+| types | 当前实例展示的可选类型，大于 1 个时会显示一个下拉菜单供选择(如果不需要，可以直接使用样式来隐藏 | Array | ['交易平台BU'] |
+| onReady | 数据加载完毕，默认选项有值 | Function | null |
+| onChange | 选项的选中状态发生了改变 | Function | null |
+| onTypeChange | 用户通过下拉菜单改变了 type 值 | Function | null |
+| loadingMessage | 文案 | Array | ['正在加载资源...', '正在请求数据...'] |
+| responseHandler | 得到返回数据后的处理函数，会传入两个参数，第一个为接口返回的原始数据，第二个为后续的 Build 方法，需要把处理完成后的数据传递进去 | Function | null |
 
 ### 调用方式
 
