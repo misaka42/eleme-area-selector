@@ -292,7 +292,7 @@
         });
       }
       var rect = this.refs.input.getBoundingClientRect();
-      this.$selectTop = rect.top + rect.height;
+      this.$selectTop = rect.top + rect.height + window.pageYOffset;
 
       var el = this.$generateSelect(0, 0, data);
       el.style.left = rect.left - 1 + 'px';
