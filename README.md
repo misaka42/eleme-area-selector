@@ -37,7 +37,9 @@ var DEFAULT_CONFIG = {
 };
 ```
 
-##### 调用方式
+### 调用方式
+
+##### 简单实例
 
 ```html
 <div id="app"></div>
@@ -59,4 +61,50 @@ as = new AreaSelector(document.getElementById('app'), {
 function destroy() {
   as.$destroy();
 }
+```
+
+##### 内置类型列表
+
+```javascript
+{
+  '交易平台BU': { id: 'bu', params: { time: 'hour' } },
+  '红包': { id: 'redReward' },
+  'BOD': { id: 'bod' },
+  '高校': { id: 'business/gx' },
+  '白领': { id: 'business/bl' },
+  '早餐': { id: 'breakfast' },
+  '城市补贴与优惠': { id: 'cityAllowance' },
+  '城市': { id: 'cityAllowance' }
+}
+```
+
+##### 使用内置类型
+
+```javascript
+new AreaSelector(document.getElementById('app'), {
+  types: ['交易平台BU', '城市'],
+  responseHandler: (data, success) => {
+    if (data && data.code === 200 && data.data) {
+      return data.data;
+    }
+  }
+})
+```
+
+##### 使用自定义类型
+
+```javascript
+new AreaSelector(document.getElementById('app'), {
+  api: '/api/filter',
+  typeMap: {
+    '自定义': { id: 'custom', params: { key1: 'value1' } }
+  },
+  // 请求会组装成 /api/filter/custom?key1=value
+  types: ['自定义'],
+  responseHandler: (data, success) => {
+    if (data && data.code === 200 && data.data) {
+      return data.data;
+    }
+  }
+})
 ```
