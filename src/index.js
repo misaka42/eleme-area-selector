@@ -330,7 +330,7 @@
           if (model.fullLoaded) { return }
 
           if (this.scrollTop / itemHeight + itemDisplay > model.display.length) {
-            forEach(model.data.slice(model.display.length - 1, model.display.length + slice), function(item) {
+            forEach(model.data.slice(model.display.length, model.display.length + slice), function(item) {
               append(el, $self.$generateSelectItem(item));
             });
             model.display = model.data.slice(0, model.display.length + slice);
