@@ -175,7 +175,7 @@
 
       this.$addEventListener(this.refs.input, 'input', function() { $self.$search() });
 
-      this.$addEventListener(this.refs.clearAll, 'click', function() { $self.$clearAll() });
+      this.$addEventListener(this.refs.clearAll, 'click', function() { $self.clearAll() });
 
       delegate(this.refs.typeList, 'type-list-item', 'click', function(target) {
         $self.$setCurrentType(target.textContent)
@@ -402,7 +402,7 @@
       this.$refreshModel();
     },
 
-    $clearAll: function() {
+    clearAll: function() {
       this.model = [];
       this.$refreshModel();
     },

@@ -50,6 +50,8 @@ var as = new AreaSelector();
 
 as.setParams({ key: 'value' }); // 会立即触发一次数据请求
 
+as.clearAll(); // 清空当前选择项
+
 ```
 
 ### 调用方式
