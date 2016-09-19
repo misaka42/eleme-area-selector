@@ -25,7 +25,7 @@ npm i eleme-area-selector
 
 ###### 基础配置
 
-`new AreaSelector([options])`
+`new AreaSelector(element[, options])`
 
 ###### options 参数
 
