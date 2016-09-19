@@ -80,7 +80,7 @@
 }
 .eas-container .result-container .clear-all {
   position: absolute;
-  left: 30px;
+  right: 0;
   top: -21px;
   border: 1px solid #b0bec5;
   line-height: 20px;
