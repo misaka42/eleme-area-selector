@@ -43,6 +43,15 @@ npm i eleme-area-selector
 | loadingMessage | 文案 | Array | ['正在加载资源...', '正在请求数据...'] |
 | responseHandler | 得到返回数据后的处理函数，会传入两个参数，第一个为接口返回的原始数据，第二个为后续的 Build 方法，需要把处理完成后的数据传递进去 | Function | null |
 
+##### 实例方法
+
+```javascript
+var as = new AreaSelector();
+
+as.setParams({ key: 'value' }); // 会立即触发一次数据请求
+
+```
+
 ### 调用方式
 
 ##### 简单实例
@@ -63,11 +72,6 @@ as = new AreaSelector(document.getElementById('app'), {
   onChange: function() { console.log('changed! current value is:', as.getModel()) }, // { level: 1, data: '123,3453,676,1' }
   onTypeChange: function(type) { console.log('current type is:', type) }
 })
-
-// destroy
-function destroy() {
-  as.$destroy();
-}
 ```
 
 ##### 内置类型列表

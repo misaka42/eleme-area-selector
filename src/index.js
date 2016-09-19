@@ -67,7 +67,13 @@
       this.$load();
     },
 
-    $load: function() {
+    setParams: function(params) {
+      if (params) {
+        this.$load(params);
+      }
+    },
+
+    $load: function(params) {
       this.el.innerHTML = this.config.loadingMessage[1];
       this.model = [];
       this.data = {};
@@ -86,7 +92,7 @@
       } else {
         fetchData({
           url: this.config.api + this.config.typeMap[this.currentType].id,
-          params: this.config.typeMap[this.currentType].params
+          params: merge(this.config.typeMap[this.currentType].params, params)
         }, (function(data) {
           if (this.config.responseHandler) {
             this.config.responseHandler(data, this.$build.bind(this));
@@ -504,6 +510,7 @@
     if (!params) {
       return '';
     }
+
     return '?' + Object.keys(params).map(function(key) {
       return key + '=' + params[key];
     }).join('&');
