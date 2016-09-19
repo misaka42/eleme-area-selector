@@ -52,6 +52,8 @@ as.setParams({ key: 'value' }); // 会立即触发一次数据请求
 
 as.clearAll(); // 清空当前选择项
 
+as.getModel(); // 获取当前的选择信息
+
 ```
 
 ### 调用方式
