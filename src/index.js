@@ -87,7 +87,7 @@
 
       this.refs = {};
 
-      if (DATA_CACHE[this.currentType]) {
+      if (!params && DATA_CACHE[this.currentType]) {
         this.$build(DATA_CACHE[this.currentType]);
       } else {
         fetchData({
@@ -557,21 +557,17 @@
   }
 
   function merge() {
-    if (typeof Object.assign === 'function') {
-      return Object.assign.apply(null, arguments);
-    } else {
-      var args = [].slice.call(arguments);
-      var target = args.shift();
-      if (!target) {
-        target = {};
-      }
-      args.forEach(function(obj) {
-        for (var key in obj) {
-          target[key] = obj[key];
-        }
-      })
-      return target;
+    var args = [].slice.call(arguments);
+    var target = args.shift();
+    if (!target) {
+      target = {};
     }
+    args.forEach(function(obj) {
+      for (var key in obj) {
+        target[key] = obj[key];
+      }
+    })
+    return target;
   }
 
   function forEach(target, callback) {
