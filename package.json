@@ -1,6 +1,6 @@
 {
   "name": "eleme-area-selector",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "### description",
   "main": "src/index.js",
   "scripts": {
