@@ -381,8 +381,10 @@
 
     $selectItem: function(item) {
       if (Array.isArray(item)) {
+        var lvl = 0;
+        if (item && item[0]) { lvl = item[0].level; }
+        this.$setCurrentLevel(lvl);
         this.model = item;
-        this.$setCurrentLevel(1);
         this.$refreshModel();
         return;
       }
