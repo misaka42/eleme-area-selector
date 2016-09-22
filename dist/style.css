@@ -1,5 +1,4 @@
 .eas-container {
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   font-size: 12px;
@@ -10,7 +9,6 @@
 }
 .eas-container .input-container {
   border: 1px solid #e7eaec;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 28px;
@@ -162,14 +160,12 @@
   background-color: #fff;
 }
 .eas-container .result-container .eas-tag > i::after {
-  -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-          transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
 }
 .eas-container .result-container .eas-tag > i::before {
-  -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
-          transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+      transform: rotate(-45deg);
 }
 .eas-select {
   font-size: 12px;
