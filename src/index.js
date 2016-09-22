@@ -382,7 +382,7 @@
     $selectItem: function(item) {
       if (Array.isArray(item)) {
         this.model = item;
-        this.$setCurrentLevel(item[0].level);
+        this.$setCurrentLevel(1);
         this.$refreshModel();
         return;
       }
