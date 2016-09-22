@@ -224,9 +224,9 @@
 
         if (this.cache && this.cache[location.pathname] && this.cache[location.pathname][this.currentType]) {
           model = merge([], this.cache[location.pathname][this.currentType]);
-          if (model.length === 0) {
-            model = this.data[0][0];
-          }
+          // if (model.length === 0) {
+          //   model = this.data[0][0];
+          // }
         }
       }
 
