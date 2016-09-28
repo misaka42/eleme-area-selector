@@ -24,6 +24,7 @@
     style: DEFAULT_STYLE_ORIGIN,
     selectItemStyle: { height: 27, display: 20 },
     selectSliceLength: 200,
+    defaultSelect: true,
     typeMap: DEFAULT_TYPES_MAP,
     onReady: null,
     onChange: null,
@@ -214,7 +215,7 @@
       this.$buildMainSelelt();
 
       // set default select item or load from cache
-      var model = this.data[0][0];
+      var model = this.config.defaultSelect ? this.data[0][0] : [];
 
       if (this.config.cache) {
         // add save event
