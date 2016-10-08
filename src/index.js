@@ -203,6 +203,11 @@
         target.classList.add('selected');
       }, true);
 
+      delegate(this.refs.selectContainer, 'eas-select-item', 'dblclick', function(target) {
+        $self.$removeSelectItem($self.selects[target.parentNode.dataset.level].display[getIndex(target)]);
+        target.classList.remove('selected');
+      }, true);
+
       delegate(this.refs.tags, 'eas-tag', 'click', function(target) {
         $self.$removeItem(getIndex(target));
       });
@@ -409,6 +414,15 @@
         }
       }
       this.$refreshModel();
+    },
+
+    $removeSelectItem: function(item) {
+      for (var i = 0; i < this.model.length; i++) {
+        if (this.model[i].n === item.n && this.model[i].i === item.i) {
+          this.$removeItem(i);
+          break;
+        }
+      }
     },
 
     clearAll: function() {

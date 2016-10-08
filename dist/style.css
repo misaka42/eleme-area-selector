@@ -188,6 +188,10 @@
   border-bottom: 1px solid #e7eaec;
   line-height: 26px;
   cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .eas-select .eas-select-item > span {
   padding: 0 15px;
