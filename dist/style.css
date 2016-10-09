@@ -69,6 +69,8 @@
 .eas-container .result-container {
   position: relative;
   padding-left: 30px;
+  -ms-flex: 1;
+      flex: 1;
 }
 .eas-container .result-container:hover .clear-all {
   opacity: 1;
@@ -95,7 +97,6 @@
 }
 .eas-container .result-container .eas-tags {
   min-height: 32px;
-  width: 500px;
   margin: 0;
   list-style: none;
   border: 1px solid transparent;
