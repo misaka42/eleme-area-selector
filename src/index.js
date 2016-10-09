@@ -199,13 +199,13 @@
       });
 
       delegate(this.refs.selectContainer, 'eas-select-item', 'click', function(target) {
-        $self.$selectItem($self.selects[target.parentNode.dataset.level].display[getIndex(target)]);
-        target.classList.add('selected');
-      }, true);
-
-      delegate(this.refs.selectContainer, 'eas-select-item', 'dblclick', function(target) {
-        $self.$removeSelectItem($self.selects[target.parentNode.dataset.level].display[getIndex(target)]);
-        target.classList.remove('selected');
+        if (target.classList.contains('selected')) {
+          $self.$removeSelectItem($self.selects[target.parentNode.dataset.level].display[getIndex(target)]);
+          target.classList.remove('selected');
+        } else {
+          $self.$selectItem($self.selects[target.parentNode.dataset.level].display[getIndex(target)]);
+          target.classList.add('selected');
+        }
       }, true);
 
       delegate(this.refs.tags, 'eas-tag', 'click', function(target) {
