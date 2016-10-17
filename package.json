@@ -7,7 +7,8 @@
     "test": "npm run build",
     "dev": "node ./node_modules/gulp/bin/gulp.js watch",
     "build": "rm dist/** && node ./node_modules/gulp/bin/gulp.js build",
-    "patch": "npm run build && git add . && git commit -m 'patch' && npm version patch && npm publish && git push"
+    "patch": "npm run build && git add . && git commit -m 'patch' && npm version patch && npm publish && git push",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
