@@ -154,6 +154,7 @@
       refs.input = createElement('input', { className: 'eas-input', type: 'search' });
 
       refs.resultContainer = createElement('div', { className: 'result-container' });
+      refs.mask = createElement('div', { className: 'mask' });
       refs.clearAll = createElement('div', { className: 'clear-all', innerHTML: '清除全部' });
       refs.tags = createElement('div', { className: 'eas-tags' });
 
@@ -164,19 +165,21 @@
       append(refs.container, refs.inputContainer, refs.resultContainer);
       append(refs.typeBox, refs.type, refs.typeList);
       append(refs.inputContainer, refs.typeBox, refs.input)
-      append(refs.resultContainer, refs.tags, refs.clearAll);
+      append(refs.resultContainer, refs.tags, refs.clearAll, refs.mask);
 
       this.refs.type.innerHTML = this.currentType;
       this.$buildTypeList();
 
       // event handler
-      this.$addEventListener(document.body, 'click', function() { $self.$hideSelect(0) });
+      this.$addEventListener(document.body, 'click', function() { $self.$hideSelect(0); $self.$showMask() });
 
       this.$addEventListener(this.refs.input, 'click', function(e) { $self.$showSelect(); e.stopPropagation() });
 
       this.$addEventListener(this.refs.input, 'input', function() { $self.$search() });
 
       this.$addEventListener(this.refs.clearAll, 'click', function() { $self.clearAll() });
+
+      this.$addEventListener(this.refs.mask, 'click', function(e) { $self.$hideMask(); e.stopPropagation() });
 
       delegate(this.refs.typeList, 'type-list-item', 'click', function(target) {
         $self.$setCurrentType(target.textContent)
@@ -210,7 +213,7 @@
 
       delegate(this.refs.tags, 'eas-tag', 'click', function(target) {
         $self.$removeItem(getIndex(target));
-      });
+      }, true);
 
       // append to page
       append(document.body, refs.selectContainer);
@@ -292,6 +295,16 @@
           this.selects[level] = null;
         }
       }
+    },
+
+    $hideMask: function() {
+      this.refs.mask.style.display = 'none';
+      this.refs.resultContainer.classList.add('active');
+    },
+
+    $showMask: function() {
+      this.refs.mask.style.display = 'block';
+      this.refs.resultContainer.classList.remove('active');
     },
 
     $refreshMainSelect: function() {

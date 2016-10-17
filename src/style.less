@@ -11,8 +11,7 @@
   .input-container {
     border: 1px solid #e7eaec;
     display: flex;
-    height: 28px;
-    line-height: 26px;
+    height: 26px;
     transition: border-color .3s;
 
     &:hover {
@@ -20,6 +19,7 @@
     }
 
     .type-box {
+      line-height: 26px;
       position: relative;
       background-color: #f8f8f8;
 
@@ -76,6 +76,7 @@
       outline: none;
       height: 100%;
       width: 180px;
+      padding: 0 5px;
     }
   }
 
@@ -84,12 +85,28 @@
     padding-left: 30px;
     flex: 1;
 
-    &:hover {
-      .clear-all {
+    .mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    &.active {
+      .eas-tags {
+        height: 96px;
         opacity: 1;
+      }
+      .clear-all {
+        display: block;
       }
       .eas-tags {
         border-color: #b0bec5;
+      }
+      .eas-tag > i {
+        display: block;
       }
     }
 
@@ -104,8 +121,7 @@
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
       cursor: pointer;
-      transition: all .3s;
-      opacity: 0;
+      display: none;
 
       &:hover {
         background-color: #eee;
@@ -113,12 +129,12 @@
     }
 
     .eas-tags {
-      min-height: 32px;
+      opacity: 0.8;
+      height: 32px;
       margin: 0;
       list-style: none;
       border: 1px solid transparent;
       transition: all .3s;
-      max-height: 96px;
       overflow: auto;
       &::-webkit-scrollbar {
         display: none;
@@ -142,10 +158,6 @@
 
       &:hover {
         box-shadow: 0 5px 11px 0 rgba(0,0,0,.18),0 4px 15px 0 rgba(0,0,0,.15);
-
-        > i {
-          opacity: 1;
-        }
       }
 
       &.disabled {
@@ -170,7 +182,7 @@
         color: #fff;
         font-style: normal;
         transition: all .2s ease-out;
-        opacity: 0;
+        display: none;
 
         &::after, &::before {
           position: absolute;

@@ -12,14 +12,14 @@
   border: 1px solid #e7eaec;
   display: -ms-flexbox;
   display: flex;
-  height: 28px;
-  line-height: 26px;
+  height: 26px;
   transition: border-color 0.3s;
 }
 .eas-container .input-container:hover {
   border-color: #b0bec5;
 }
 .eas-container .input-container .type-box {
+  line-height: 26px;
   position: relative;
   background-color: #f8f8f8;
 }
@@ -66,6 +66,7 @@
   outline: none;
   height: 100%;
   width: 180px;
+  padding: 0 5px;
 }
 .eas-container .result-container {
   position: relative;
@@ -73,11 +74,26 @@
   -ms-flex: 1;
       flex: 1;
 }
-.eas-container .result-container:hover .clear-all {
+.eas-container .result-container .mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.eas-container .result-container.active .eas-tags {
+  height: 96px;
   opacity: 1;
 }
-.eas-container .result-container:hover .eas-tags {
+.eas-container .result-container.active .clear-all {
+  display: block;
+}
+.eas-container .result-container.active .eas-tags {
   border-color: #b0bec5;
+}
+.eas-container .result-container.active .eas-tag > i {
+  display: block;
 }
 .eas-container .result-container .clear-all {
   position: absolute;
@@ -90,19 +106,18 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   cursor: pointer;
-  transition: all .3s;
-  opacity: 0;
+  display: none;
 }
 .eas-container .result-container .clear-all:hover {
   background-color: #eee;
 }
 .eas-container .result-container .eas-tags {
-  min-height: 32px;
+  opacity: 0.8;
+  height: 32px;
   margin: 0;
   list-style: none;
   border: 1px solid transparent;
   transition: all .3s;
-  max-height: 96px;
   overflow: auto;
 }
 .eas-container .result-container .eas-tags::-webkit-scrollbar {
@@ -126,9 +141,6 @@
 .eas-container .result-container .eas-tag:hover {
   box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
 }
-.eas-container .result-container .eas-tag:hover > i {
-  opacity: 1;
-}
 .eas-container .result-container .eas-tag.disabled {
   background-color: #eee;
   color: #999;
@@ -149,7 +161,7 @@
   color: #fff;
   font-style: normal;
   transition: all 0.2s ease-out;
-  opacity: 0;
+  display: none;
 }
 .eas-container .result-container .eas-tag > i::after,
 .eas-container .result-container .eas-tag > i::before {
