@@ -16,7 +16,7 @@
 
   var DEFAULT_ORIGIN = '/api/other/filter/';
 
-  var DEFAULT_STYLE_ORIGIN = '//npm.elemecdn.com/eleme-area-selector@0.6.2/dist/style.css';
+  var DEFAULT_STYLE_ORIGIN = '//npm.elemecdn.com/eleme-area-selector@0.7.1/dist/style.css';
   /* --- 内置数据门户配置 END --- */
 
   var DEFAULT_CONFIG = {
