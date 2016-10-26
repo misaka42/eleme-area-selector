@@ -233,13 +233,10 @@
 
         if (this.cache && this.cache[location.pathname] && this.cache[location.pathname][this.currentType]) {
           model = merge([], this.cache[location.pathname][this.currentType]);
-          // if (model.length === 0) {
-          //   model = this.data[0][0];
-          // }
         }
       }
 
-      this.$selectItem(model.reverse());
+      this.$selectItem(model);
 
       if (this.config.onReady) { this.config.onReady() }
     },
