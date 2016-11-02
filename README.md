@@ -35,6 +35,8 @@ npm i eleme-area-selector
 | style | 样式文件的 CDN 地址 | String | `//unpkg.com/eleme-area-selector/dist/style.css` |
 | selectItemStyle | 列表中单位的高度和按需加载的单位 | Object | { height: 27, display: 20 } |
 | selectSliceLength | 开启按需加载的列表长度，超过这个数值则开启按需加载 | Number | 200 |
+| cache | 是否缓存用户的选择状态，开启则存储在 LocalStorage 中，使用页面 URL + Type 来标识 | Boolean | false |
+| cacheKey | LocalStorage 使用的 key，只存一条记录，内容使用 JSON 组织 | String | EAS-CACHE |
 | defaultSelect | 初始状态是否默认选择第一层级的所有项(cache 属性打开时依然优先 cache 的值) | Boolean | true |
 | typeMap | 内置的数据门户常用过滤器类型(以前他们说绝对不加新的了 WTF | Object | [see]( #内置类型列表 ) |
 | types | 当前实例展示的可选类型，大于 1 个时会显示一个下拉菜单供选择(如果不需要，可以直接使用样式来隐藏 | Array | ['交易平台BU'] |

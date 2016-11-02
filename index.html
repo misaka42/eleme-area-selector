@@ -32,8 +32,12 @@
           if (data && data.code === 200 && data.data) {
             success(data.data)
           }
+        },
+        onChange() {
+          console.info(as.getModel(1))
         }
       });
+
     }
 
     window.destroy = function () {
