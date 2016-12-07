@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESelect Test</title>
+  <style>
+    body, html {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="test/seed.js"></script>
+  <script>
+    var el = document.getElementById('app')
+    var opt = {
+      data: [
+        {
+          name: '交易平台BU',
+          data: seed[0],
+          struct: seed[0].struct
+        },
+        {
+          name: '红包',
+          data: seed[1],
+          struct: seed[1].struct
+        }
+      ]
+    }
+
+    var app = window.ESelect.init(el, opt)
+  </script>
+</body>
+</html>
