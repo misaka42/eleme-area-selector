@@ -5,13 +5,12 @@ import Tags from './Tags'
 
 class Panel extends ESelect {
   get Tabs () { return Tabs }
-  get Tags () { return Tags }
 
   get template () {
     return `
     <div>
       <jkl-tabs $ref></jkl-tabs>
-      <jkl-tags $ref></jkl-tags>
+      <div ref="box"></div>
     </div>`
   }
 
@@ -20,19 +19,37 @@ class Panel extends ESelect {
       border: 1px solid #ddd;
       flex: 1;
       margin-left: 15px;
+      max-width: 600px;
     }`
   }
 
   ready () {
-    this.$subscribe('item-select', this.addTag.bind(this))
-  }
+    this.$subscribe('type-change', type => {
+      this.currentType = type
+      this._tagsRef.forEach(tags => {
+        tags.element.style.display = tags.type.name === type ? 'flex' : 'none'
+      })
+    })
 
-  initTags (arr) {
-    this.$tags.batch(arr)
+    this.$subscribe('category-change', arr => {
+      this.currentType = arr[0].name
+      const data = arr.map(d => {
+        return {
+          type: d,
+          $parent: this
+        }
+      })
+
+      this._tagsRef = Tags.from(data).to(this.box)
+    })
   }
 
   addTag (data) {
-    this.$tags.add(data)
+    this._tagsRef.forEach(tags => {
+      if (tags.type.name === this.currentType) {
+        tags.add(data)
+      }
+    })
   }
 }
 

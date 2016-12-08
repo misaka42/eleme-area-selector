@@ -9,30 +9,29 @@ class Tags extends ESelect {
       list-style: none;
       margin: 0;
       padding: 0;
-      display: flex;
       line-height: 20px;
+      text-align: left;
       > li {
-        margin: 3px;
-        padding: 0 10px;
+        display: inline-block;
+        margin: 3px 0 0 3px;
+        padding: 0 5px;
         border: 1px solid #ddd;
+        cursor: pointer;
       }
     }`
   }
 
-  clear () {}
-
-  batch (arr) {
-    Tag.from(arr).to(this)
-  }
-
   add (data) {
-    data.tag = new Tag(data).to(this)
+    data.tag = new Tag({ name: data.n }).to(this)
+    data.tag.element.addEventListener('click', () => {
+      this.$dispatch('item-remove', data)
+    })
   }
 }
 
 class Tag extends ESelect {
   get template () {
-    return `<li>{name}</li>`
+    return `<li on-click="{click}">{name}</li>`
   }
 }
 

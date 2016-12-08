@@ -10,11 +10,6 @@ class Select extends ESelect {
       this.element.style[attr] = this.position[attr] + 'px'
     })
 
-    this.element.addEventListener('item-hover', e => {
-      e.detail.index = this.index
-      this.$parent.$parent.itemHover(e)
-    })
-
     this.render()
   }
 
@@ -49,7 +44,7 @@ class Select extends ESelect {
 
   nextPage () {
     if (this.lazy.index < this.lazy.max - 1) {
-      Item.from(this.getPageData(++this.lazy.index)).to(this)
+      this.renderData(this.getPageData(++this.lazy.index))
       // recalculate scrollHeight
       setTimeout(() => { this.lazy.scrollHeight = this.element.scrollHeight }, 0)
     }
@@ -68,40 +63,45 @@ class Select extends ESelect {
 
     this.element.innerHTML = ''
     if (this.lazy) {
-      Item.from(this.getPageData(0)).to(this)
+      this.renderData(this.getPageData(0))
     } else {
-      Item.from(this.data).to(this)
+      this.renderData(this.data)
     }
+  }
+
+  renderData (data) {
+    data.forEach(d => {
+      let node = new Item({ title: d.title, name: d.n, selected: d.selected }).to(this)
+
+      node.element.addEventListener('click', e => {
+        e.stopPropagation()
+        d.node = node.element
+        this.$dispatch(
+          d.selected ? 'item-remove' : 'item-select',
+          d
+        )
+      })
+
+      node.element.addEventListener('mouseenter', e => {
+        d.index = this.index
+        this.$parent.$parent.itemHover({ target: node.element, detail: d })
+      })
+    })
   }
 }
 
 class Item extends ESelect {
   get template () {
     return `
-    <li on-click="{click}" on-mouseenter="{mouseenter}">
-      <span>{title}</span><strong>{n}</strong>
+    <li>
+      <span>{title}</span><strong>{name}</strong>
     </li>`
   }
 
-  click (e) {
-    e.stopPropagation()
-    this._dispatch('item-select')
-  }
-
-  mouseenter () {
-    this._dispatch('item-hover')
-  }
-
-  _dispatch (action) {
-    this.element.dispatchEvent(new CustomEvent(action, {
-      bubbles: true,
-      detail: {
-        name: this.n,
-        id: this.i,
-        level: this.level,
-        title: this.title
-      }
-    }))
+  init () {
+    if (this.selected) {
+      this.element.classList.add('selected')
+    }
   }
 }
 

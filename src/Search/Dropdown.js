@@ -66,6 +66,8 @@ class Dropdown extends ESelect {
     this.$subscribe('background-click', data => {
       this.show = false
     })
+
+    this.$subscribe('type-change', name => { this.$label.text = name })
   }
 
   click (e) {
@@ -73,7 +75,7 @@ class Dropdown extends ESelect {
 
     if (e.target.tagName === 'LI' && this.text !== e.target.innerText) {
       this.text = e.target.innerText
-      this.$dispatch('category-select', this.text)
+      this.$dispatch('type-change', this.text)
     } else {
       e.stopPropagation()
     }

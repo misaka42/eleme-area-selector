@@ -22,7 +22,7 @@ class Container extends ESelect {
     return `
     <div>
       <jkl-search $ref></jkl-search>
-      <jkl-panel $ref></jkl-panel>
+      <jkl-panel types="{types}" $ref></jkl-panel>
     </div>
     `
   }
@@ -41,15 +41,19 @@ class Container extends ESelect {
   }
 
   init () {
-    this.model = []
+    this.selected = []
 
     document.body.addEventListener('click', this.backgroundClick.bind(this))
+
     this.$subscribe('item-select', this.itemSelect.bind(this))
+    this.$subscribe('item-remove', this.itemRemove.bind(this))
+    this.$subscribe('type-change', this.typeChange.bind(this))
   }
 
   ready () {
-    const category = this._option.data.map(({ name }) => { return { name } })
-    this.$dispatch('category-change', category)
+    this.types = this._option.data.map(({ name }) => { return { name } })
+    this.$dispatch('category-change', this.types)
+    this.typeChange(this.types[0].name)
   }
 
   destroy () {
@@ -60,8 +64,24 @@ class Container extends ESelect {
     this.$dispatch('background-click')
   }
 
-  itemSelect (data) {
-    this.model.push(data)
+  itemSelect (item) {
+    item.type = this.currentType
+    item.selected = true
+    item.node.classList.add('selected')
+    this.$panel.addTag(item)
+    this.selected.push(item)
+  }
+
+  itemRemove (item) {
+    item.selected = false
+    item.node.classList.remove('selected')
+    item.tag && item.tag.element.remove()
+    delete item.tag
+    this.selected = this.selected.filter(s => s.i === item.i && s.level === item.level)
+  }
+
+  typeChange (type) {
+    this.currentType = type
   }
 }
 

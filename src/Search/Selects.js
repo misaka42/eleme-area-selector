@@ -33,6 +33,9 @@ class Selects extends ESelect {
         &:hover {
           background: #f1f1f1;
         }
+        &.selected {
+          color: #19d4ae;
+        }
       }
       span {
         padding: 0 10px;
@@ -54,9 +57,10 @@ class Selects extends ESelect {
       this.removeBy(0)
     })
 
-    this.element.addEventListener('item-select', e => {
+    this.element.addEventListener('item-click', e => {
       e.detail.node = e.target
-      this.$dispatch('item-select', e.detail)
+      const action = e.target.classList.contains('selected') ? 'item-remove' : 'item-select'
+      this.$dispatch(action, e.detail)
     })
   }
 

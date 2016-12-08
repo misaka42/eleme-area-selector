@@ -26,15 +26,14 @@ class Search extends ESelect {
     }`
   }
 
-  get currentName () {
-    return this.$dropdown.text
-  }
+  get currentType () { return this.$parent.currentType }
+  set currentType (name) { this.$parent.currentType = name }
 
-  get model () { return this._model[this.currentName] }
-  set model (v) { this._model[this.currentName] = v }
+  get model () { return this._model[this.currentType] }
+  set model (v) { this._model[this.currentType] = v }
 
-  get flat () { return this._flat[this.currentName] }
-  set flat (v) { this._flat[this.currentName] = v }
+  get flat () { return this._flat[this.currentType] }
+  set flat (v) { this._flat[this.currentType] = v }
 
   setData (data) {
     // TODO: init $selects status
@@ -72,17 +71,13 @@ class Search extends ESelect {
     this.$selects.show({ position, index: 0, data: this.flat })
   }
 
-  itemClick (node) {
-
-  }
-
   itemHover ({ target, detail }) {
     if (detail.level >= this.model.struct.length - 1) {
       if (detail.index === 0) { this.$selects.removeBy(1) }
       return
     }
 
-    const data = this.model.data[detail.level + 1][detail.id]
+    const data = this.model.data[detail.level + 1][detail.i]
     if (!data || !data.length) { return }
 
     const { top, left, width } = target.getBoundingClientRect()
