@@ -71,11 +71,159 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jinkela__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jinkela___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jinkela__);
+/* 预留，以后可能会扩展原型 */
+
+
+__WEBPACK_IMPORTED_MODULE_0_jinkela___default.a.register('$ref', function(that, node, ownerElement) {
+  Object.defineProperty(ownerElement.component, '$parent', {
+    configurable: true,
+    enumerable: false,
+    get: function() {
+      return that
+    }
+  })
+
+  ownerElement.setAttribute('ref', node.ownerElement.tagName.toLowerCase().replace(/^jkl-(.+)$/, '$$$1'))
+});
+
+const prefix = 'ES-'
+
+class ESelect extends __WEBPACK_IMPORTED_MODULE_0_jinkela___default.a {
+  constructor (...arg) {
+    super(...arg)
+    setTimeout(this.ready && this.ready.bind(this), 0)
+  }
+
+  get $root () {
+    let ref = this
+    while(ref['$parent']) {
+      ref = ref['$parent']
+    }
+    return ref
+  }
+
+  $dispatch (action, detail) {
+    this.$root.element.dispatchEvent(new CustomEvent(prefix + action, { detail }))
+  }
+
+  $subscribe (action, callback) {
+    this.$root.element.addEventListener(prefix + action, e => { callback(e.detail) })
+  }
+}
+
+/* harmony default export */ exports["a"] = ESelect;
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Search__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Panel__ = __webpack_require__(7);
+
+
+
+
+
+class Container extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get Search () { return __WEBPACK_IMPORTED_MODULE_1__Search__["a" /* default */] }
+  get Panel () { return __WEBPACK_IMPORTED_MODULE_2__Panel__["a" /* default */] }
+
+  set option (v) {
+    if (Array.isArray(v)) {
+      v = { data: v }
+    }
+    if (!v || !v.data) {
+      throw new Error('invalid option', v)
+    }
+    this._option = v
+    this.$search.setData(this._option.data)
+  }
+
+  get template () {
+    return `
+    <div>
+      <jkl-search $ref></jkl-search>
+      <jkl-panel types="{types}" $ref></jkl-panel>
+    </div>
+    `
+  }
+
+  get styleSheet () {
+    return `:scope {
+      display: flex;
+      color: #666;
+      line-height: 26px;
+      font-size: 12px;
+      text-align: center;
+      * {
+        box-sizing: border-box;
+      }
+    }`
+  }
+
+  init () {
+    this.selected = []
+
+    document.body.addEventListener('click', this.backgroundClick.bind(this))
+
+    this.$subscribe('item-select', this.itemSelect.bind(this))
+    this.$subscribe('item-remove', this.itemRemove.bind(this))
+    this.$subscribe('type-change', this.typeChange.bind(this))
+  }
+
+  ready () {
+    this.types = this._option.data.map(({ name }) => { return { name } })
+    this.$dispatch('category-change', this.types)
+    this.typeChange(this.types[0].name)
+  }
+
+  destroy () {
+    document.body.removeEventListener(this.backgroundClick)
+  }
+
+  backgroundClick () {
+    this.$dispatch('background-click')
+  }
+
+  itemSelect (item) {
+    item.type = this.currentType
+    item.selected = true
+    item.node.classList.add('selected')
+    this.$panel.addTag(item)
+    this.selected.push(item)
+  }
+
+  itemRemove (item) {
+    item.selected = false
+    item.node.classList.remove('selected')
+    item.tag && item.tag.element.remove()
+    delete item.tag
+    this.selected = this.selected.filter(s => s.i === item.i && s.level === item.level)
+  }
+
+  typeChange (type) {
+    this.currentType = type
+  }
+}
+
+/* harmony default export */ exports["a"] = Container;
+
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**/ void function(scope) {
@@ -90,7 +238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /**/   });
 /**/
 /**/   // AMD, wrap a 'String' to avoid warn of fucking webpack
-/**/   if (String("function") === 'function' && !!__webpack_require__(2)) return scope(__webpack_require__(1));
+/**/   if (String("function") === 'function' && !!__webpack_require__(4)) return scope(__webpack_require__(3));
 /**/
 /**/   // Global
 /**/   scope(function(name, dependencies, factory) {
@@ -464,14 +612,14 @@ Jinkela.register('ref', function(that, node, ownerElement) {
 
 
 /***/ },
-/* 1 */
+/* 3 */
 /***/ function(module, exports) {
 
 module.exports = function() { throw new Error("define cannot be used indirect"); };
 
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -479,35 +627,706 @@ module.exports = function() { throw new Error("define cannot be used indirect");
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jinkela__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jinkela___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jinkela__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
 
 
-class ESelect extends __WEBPACK_IMPORTED_MODULE_0_jinkela___default.a {
-  constructor (...args) {
-    super(...args)
+class Tabs extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template () {
+    return `<div on-tab-click="{tabClick}"></div>`
+  }
 
-    // if (!element) {
-    //   throw new Error('element cannot be empty')
-    // }
-    //
-    // if (Array.isArray(option)) {
-    //   option = { data: option }
-    // }
-    //
-    // if (!option || !option.data) {
-    //   throw new Error('invalid options')
-    // }
+  get styleSheet () {
+    return `:scope {
+      display: flex;
+      position: relative;
+      top: 1px;
+      cursor: default;
+      user-select: none;
+    }`
+  }
 
+  ready () {
+    this.$subscribe('category-change', arr => {
+      this.innerHTML = ''
+      arr[0].selected = true
+      this._refs = Tab.from(arr).to(this)
+    })
 
+    this.$subscribe('type-change', name => {
+      this._refs.forEach(tab => {
+        tab.selected = tab.name === name
+      })
+    })
+  }
+
+  tabClick ({ detail }) {
+    this.$dispatch('type-change', detail)
   }
 }
 
-/* harmony default export */ exports["default"] = ESelect;
+class Tab extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template () {
+    return `<div on-click="{click}">{name}</div>`
+  }
+
+  get styleSheet () {
+    return `:scope {
+      padding: 0 15px;
+      height: 20px;
+      line-height: 20px;
+      border: 1px solid #ddd;
+      border-right: none;
+      color: #999;
+      &:last-child {
+        border-right: 1px solid #ddd;
+      }
+      &.selected, &:hover.selected {
+        border-bottom-color: #f8f8f8;
+        background: #f8f8f8;
+        color: #333;
+      }
+      &:hover {
+        color: #333;
+      }
+    }`
+  }
+
+  set selected (b) {
+    this.element.className = b ? 'selected' : ''
+  }
+
+  click () {
+    if (!this.selected) {
+      this.element.dispatchEvent(new CustomEvent('tab-click', {
+        bubbles: true,
+        detail: this.name
+      }))
+    }
+  }
+}
+
+/* harmony default export */ exports["a"] = Tabs;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+
+
+class Tags extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get Tag () { return Tag }
+  get tagName () { return 'ul' }
+
+  get styleSheet () {
+    return `:scope {
+      list-style: none;
+      margin: 0;
+      padding: 3px 0 0 0;
+      line-height: 18px;
+      text-align: left;
+      min-height: 24px;
+      > li {
+        display: inline-block;
+        margin: 0 0 3px 3px;
+        padding: 0 8px;
+        cursor: pointer;
+        height: 18px;
+        border-radius: 2px;
+        background: #19d4ae;
+        color: #fff;
+      }
+    }`
+  }
+
+  add (data) {
+    data.tag = new Tag({ name: data.n }).to(this)
+    data.tag.element.addEventListener('click', () => {
+      this.$dispatch('item-remove', data)
+    })
+  }
+}
+
+class Tag extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template () {
+    return `<li on-click="{click}">{name}</li>`
+  }
+}
+
+/* harmony default export */ exports["a"] = Tags;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Tabs__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Tags__ = __webpack_require__(6);
+
+
+
+
+
+class Panel extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get Tabs () { return __WEBPACK_IMPORTED_MODULE_1__Tabs__["a" /* default */] }
+
+  get template () {
+    return `
+    <div>
+      <jkl-tabs $ref></jkl-tabs>
+      <section ref="box"></section>
+    </div>`
+  }
+
+  get styleSheet () {
+    return `:scope {
+      flex: 1;
+      margin-left: 15px;
+      max-width: 600px;
+      > section {
+        border: 1px solid #ddd;
+        background: #f8f8f8;
+      }
+    }`
+  }
+
+  ready () {
+    this.$subscribe('type-change', type => {
+      this.currentType = type
+      this._tagsRef.forEach(tags => {
+        tags.element.style.display = tags.type.name === type ? 'block' : 'none'
+      })
+    })
+
+    this.$subscribe('category-change', arr => {
+      this.currentType = arr[0].name
+      const data = arr.map(d => {
+        return {
+          type: d,
+          $parent: this
+        }
+      })
+
+      this._tagsRef = __WEBPACK_IMPORTED_MODULE_2__Tags__["a" /* default */].from(data).to(this.box)
+    })
+  }
+
+  addTag (data) {
+    this._tagsRef.forEach(tags => {
+      if (tags.type.name === this.currentType) {
+        tags.add(data)
+      }
+    })
+  }
+}
+
+/* harmony default export */ exports["a"] = Panel;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+
+
+class Dropdown extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get List () { return List }
+  get Label () { return Label }
+
+  get template () {
+    return `
+    <div on-click="{click}">
+      <jkl-label $ref text="{text}"></jkl-label>
+      <jkl-list $ref data="{data}" show="{show}"></jkl-list>
+    </div>
+    `
+  }
+
+  get styleSheet () {
+    return `:scope {
+      position: relative;
+      border-right: 1px solid #ddd;
+      cursor: default;
+      user-select: none;
+      > div {
+        padding: 0 10px;
+        min-width: 100px;
+        height: 24px;
+        background: #f8f8f8;
+        transition: background .1s;
+        &:hover {
+          background: #eee;
+        }
+        &:active {
+          background: #ddd;
+        }
+        &::after {
+          content: '▼'
+        }
+      }
+      > ul {
+        position: absolute;
+        width: 100%;
+        top: 24px;
+        left: -1px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #ddd;
+        border-top: none;
+        box-sizing: content-box;
+      }
+      li {
+        height: 26px;
+        border-top: 1px solid #ddd;
+        &:hover {
+          background: #eee;
+        }
+      }
+    }`
+  }
+
+  ready () {
+    this.$subscribe('category-change', data => {
+      this.data = data
+      this.text = data[0].name
+    })
+
+    this.$subscribe('background-click', data => {
+      this.show = false
+    })
+
+    this.$subscribe('type-change', name => { this.$label.text = name })
+  }
+
+  click (e) {
+    this.show = !this.show
+
+    if (e.target.tagName === 'LI' && this.text !== e.target.innerText) {
+      this.text = e.target.innerText
+      this.$dispatch('type-change', this.text)
+    } else {
+      e.stopPropagation()
+    }
+  }
+
+  select (name) {
+    this.text = name
+  }
+}
+
+class Label extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template() {
+    return `<div>{text}</div>`
+  }
+}
+
+class List extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get tagName () { return 'ul' }
+
+  set data (data) {
+    if (Array.isArray(data)) {
+      Item.from(data).to(this)
+    }
+  }
+
+  set show (show) {
+    this.element.style.display = show ? 'block' : 'none'
+  }
+}
+
+class Item extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template () {
+    return `
+    <li>{name}</li>
+    `
+  }
+}
+
+/* harmony default export */ exports["a"] = Dropdown;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+
+
+class Input extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template () {
+    return `<input type="search" />`
+  }
+
+  get styleSheet () {
+    return `:scope {
+      outline: none;
+      border: none;
+      margin: 0;
+      padding: 0 10px;
+      flex: 1;
+    }`
+  }
+}
+
+/* harmony default export */ exports["a"] = Input;
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+
+
+const PAGE_SIZE = 50
+
+class Select extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get tagName () { return 'ul' }
+
+  init () {
+    Object.keys(this.position).forEach(attr => {
+      this.element.style[attr] = this.position[attr] + 'px'
+    })
+
+    this.render()
+  }
+
+  enableLazyRender () {
+    this.lazy = { index: 0 }
+    this.lazy.max = Math.ceil(this.data.length / PAGE_SIZE)
+
+    this.element.addEventListener('scroll', this.scroll.bind(this))
+  }
+
+  disableLazyRender () {
+    this.lazy = null
+    this.element.removeEventListener('scroll', this.scroll)
+  }
+
+  scroll () {
+    const { element, lazy } = this
+
+    if (!lazy.scrollHeight || !lazy.offsetHeight) {
+      lazy.scrollHeight = element.scrollHeight
+      lazy.offsetHeight = element.offsetHeight
+    }
+    // TODO: throttle
+    if (element.scrollTop + lazy.offsetHeight * 2 > lazy.scrollHeight) {
+      this.nextPage()
+    }
+  }
+
+  getPageData (index) {
+    return this.data.slice(index * PAGE_SIZE, index * PAGE_SIZE + PAGE_SIZE)
+  }
+
+  nextPage () {
+    if (this.lazy.index < this.lazy.max - 1) {
+      this.renderData(this.getPageData(++this.lazy.index))
+      // recalculate scrollHeight
+      setTimeout(() => { this.lazy.scrollHeight = this.element.scrollHeight }, 0)
+    }
+  }
+
+  render (data) {
+    if (data) { this.data = data }
+
+    if (this.data.length > PAGE_SIZE && !this.lazy) {
+      this.enableLazyRender()
+    }
+
+    if (this.data.length < PAGE_SIZE && this.lazy) {
+      this.disableLazyRender()
+    }
+
+    this.element.innerHTML = ''
+    if (this.lazy) {
+      this.renderData(this.getPageData(0))
+    } else {
+      this.renderData(this.data)
+    }
+  }
+
+  renderData (data) {
+    data.forEach(d => {
+      let node = new Item({ title: d.title, name: d.n, selected: d.selected }).to(this)
+
+      node.element.addEventListener('click', e => {
+        e.stopPropagation()
+        d.node = node.element
+        this.$dispatch(
+          d.selected ? 'item-remove' : 'item-select',
+          d
+        )
+      })
+
+      node.element.addEventListener('mouseenter', e => {
+        d.index = this.index
+        this.$parent.$parent.itemHover({ target: node.element, detail: d })
+      })
+    })
+  }
+}
+
+class Item extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get template () {
+    return `
+    <li>
+      <span>{title}</span><strong>{name}</strong>
+    </li>`
+  }
+
+  init () {
+    if (this.selected) {
+      this.element.classList.add('selected')
+    }
+  }
+}
+
+/* harmony default export */ exports["a"] = Select;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Select__ = __webpack_require__(10);
+
+
+
+class Selects extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get tagName () { return 'div' }
+
+  get styleSheet () {
+    return `:scope {
+      cursor: default;
+      user-select: none;
+      * {
+        box-sizing: border-box;
+      }
+      > ul {
+        position: absolute;
+        z-index: 999;
+        background: #fff;
+        list-style: none;
+        line-height: 26px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-top: none;
+        max-height: 390px;
+        overflow: auto;
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        color: #666;
+      }
+      li {
+        display: flex;
+        height: 26px;
+        border-top: 1px solid #ddd;
+        transition: background .1s;
+        &:hover {
+          background: #f1f1f1;
+        }
+        &.selected {
+          color: #19d4ae;
+        }
+      }
+      span {
+        padding: 0 10px;
+        background: #f8f8f8;
+        color: #aaa;
+        border-right: 1px solid #ddd;
+      }
+      strong {
+        flex: 1;
+        padding: 0 15px;
+      }
+    }`
+  }
+
+  init () {
+    this._refs = []
+
+    this.$subscribe('background-click', () => {
+      this.removeBy(0)
+    })
+
+    this.element.addEventListener('item-click', e => {
+      e.detail.node = e.target
+      const action = e.target.classList.contains('selected') ? 'item-remove' : 'item-select'
+      this.$dispatch(action, e.detail)
+    })
+  }
+
+  set (index, data) {
+    this.removeBy(index + 1)
+    this._refs[index].render(data)
+  }
+
+  show ({ index, data, position }) {
+    this.removeBy(index)
+    this._refs[index] = new __WEBPACK_IMPORTED_MODULE_1__Select__["a" /* default */]({ index, data, position, $parent: this }).to(this)
+  }
+
+  remove (index) {
+    if (this._refs[index]) {
+      this.element.removeChild(this._refs[index].element)
+      this._refs[index] = null
+    }
+  }
+
+  removeBy (index) {
+    for (let i = index; i < this._refs.length; i++) {
+      this.remove(i)
+    }
+  }
+}
+
+/* harmony default export */ exports["a"] = Selects;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ESelect__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Dropdown__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Input__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Selects__ = __webpack_require__(11);
+
+
+
+
+
+
+class Search extends __WEBPACK_IMPORTED_MODULE_0__ESelect__["a" /* default */] {
+  get Dropdown () { return __WEBPACK_IMPORTED_MODULE_1__Dropdown__["a" /* default */] }
+  get Input () { return __WEBPACK_IMPORTED_MODULE_2__Input__["a" /* default */] }
+
+  get template () {
+    return `
+    <div on-input="{search}">
+      <jkl-dropdown $ref></jkl-dropdown>
+      <jkl-input $ref on-click="{inputClick}"></jkl-input>
+    </div>
+    `
+  }
+
+  get styleSheet () {
+    return `:scope {
+      width: 300px;
+      height: 26px;
+      display: flex;
+      border: 1px solid #ddd;
+    }`
+  }
+
+  get currentType () { return this.$parent.currentType }
+  set currentType (name) { this.$parent.currentType = name }
+
+  get model () { return this._model[this.currentType] }
+  set model (v) { this._model[this.currentType] = v }
+
+  get flat () { return this._flat[this.currentType] }
+  set flat (v) { this._flat[this.currentType] = v }
+
+  setData (data) {
+    // TODO: init $selects status
+    this._model = {}
+    this._flat = {}
+
+    data.forEach(d => {
+      this._model[d.name] = d
+      const flat = []
+      d.struct.forEach((title, index) => {
+        for (let id in d.data[index]) {
+          d.data[index][id].forEach(item => {
+            item.title = title
+            item.level = index
+            flat.push(item)
+          })
+        }
+      })
+      this._flat[d.name] = flat
+    })
+  }
+
+  inputClick (e) {
+    e.stopPropagation()
+    if (!this.$selects) {
+      this.$selects = new __WEBPACK_IMPORTED_MODULE_3__Selects__["a" /* default */]({ $parent: this }).to(document.body)
+    }
+
+    const { top, left, height } = this.$input.element.getBoundingClientRect()
+    const position = {
+      top: top + height + window.pageYOffset,
+      left: left + window.pageXOffset
+    }
+
+    this.$selects.show({ position, index: 0, data: this.flat })
+  }
+
+  itemHover ({ target, detail }) {
+    if (detail.level >= this.model.struct.length - 1) {
+      if (detail.index === 0) { this.$selects.removeBy(1) }
+      return
+    }
+
+    const data = this.model.data[detail.level + 1][detail.i]
+    if (!data || !data.length) { return }
+
+    const { top, left, width } = target.getBoundingClientRect()
+    this.$selects.show({
+      data,
+      index: detail.index + 1,
+      position: {
+        top: top + window.pageYOffset,
+        left: left + width + window.pageXOffset
+      }
+    })
+  }
+
+  search ({ target }) {
+    // TODO: debounce
+    const data = this.flat.filter(d => d.n.indexOf(target.value) >= 0)
+    this.$selects.set(0, data)
+  }
+}
+
+/* harmony default export */ exports["a"] = Search;
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Container__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(exports, "init", function() { return init; });
+
+
+function init (element, option) {
+  return new __WEBPACK_IMPORTED_MODULE_0__Container__["a" /* default */]({ option }).renderTo(element)
+}
+
+
 
 
 /***/ }
