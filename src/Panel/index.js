@@ -10,16 +10,19 @@ class Panel extends ESelect {
     return `
     <div>
       <jkl-tabs $ref></jkl-tabs>
-      <div ref="box"></div>
+      <section ref="box"></section>
     </div>`
   }
 
   get styleSheet () {
     return `:scope {
-      border: 1px solid #ddd;
       flex: 1;
       margin-left: 15px;
       max-width: 600px;
+      > section {
+        border: 1px solid #ddd;
+        background: #f8f8f8;
+      }
     }`
   }
 
@@ -27,7 +30,7 @@ class Panel extends ESelect {
     this.$subscribe('type-change', type => {
       this.currentType = type
       this._tagsRef.forEach(tags => {
-        tags.element.style.display = tags.type.name === type ? 'flex' : 'none'
+        tags.element.style.display = tags.type.name === type ? 'block' : 'none'
       })
     })
 

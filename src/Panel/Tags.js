@@ -8,15 +8,19 @@ class Tags extends ESelect {
     return `:scope {
       list-style: none;
       margin: 0;
-      padding: 0;
-      line-height: 20px;
+      padding: 3px 0 0 0;
+      line-height: 18px;
       text-align: left;
+      min-height: 24px;
       > li {
         display: inline-block;
-        margin: 3px 0 0 3px;
-        padding: 0 5px;
-        border: 1px solid #ddd;
+        margin: 0 0 3px 3px;
+        padding: 0 8px;
         cursor: pointer;
+        height: 18px;
+        border-radius: 2px;
+        background: #19d4ae;
+        color: #fff;
       }
     }`
   }

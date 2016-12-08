@@ -8,7 +8,8 @@ class Tabs extends ESelect {
   get styleSheet () {
     return `:scope {
       display: flex;
-      border-bottom: 1px solid #ddd;
+      position: relative;
+      top: 1px;
       cursor: default;
       user-select: none;
     }`
@@ -41,14 +42,21 @@ class Tab extends ESelect {
   get styleSheet () {
     return `:scope {
       padding: 0 15px;
-      border-right: 1px solid #ddd;
+      height: 20px;
+      line-height: 20px;
+      border: 1px solid #ddd;
+      border-right: none;
+      color: #999;
+      &:last-child {
+        border-right: 1px solid #ddd;
+      }
       &.selected, &:hover.selected {
-        color: #fff;
-        background: #19d4ae;
-        border-color: #19d4ae;
+        border-bottom-color: #f8f8f8;
+        background: #f8f8f8;
+        color: #333;
       }
       &:hover {
-        color: #19d4ae;
+        color: #333;
       }
     }`
   }

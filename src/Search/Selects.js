@@ -13,6 +13,8 @@ class Selects extends ESelect {
       }
       > ul {
         position: absolute;
+        z-index: 999;
+        background: #fff;
         list-style: none;
         line-height: 26px;
         text-align: center;
